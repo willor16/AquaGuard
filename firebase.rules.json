@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+    "tanks": {
+      "$tankId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('tanks').child($tankId).val() === true",
+        "meta": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+        },
+        "config": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() !== 'lectura'"
+        },
+        "desired": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() !== 'lectura'"
+        },
+        "reported": { ".write": "false" },
+        "alerts": { ".write": "false" },
+        "events": { ".write": "false" },
+        "history": { ".write": "false" }
+      }
+    }
+  }
+}

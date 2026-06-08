@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SFMono-Regular",
+    "Cascadia Code", monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-base-850 text-ink font-sans antialiased;
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(46, 230, 214, 0.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(74, 163, 255, 0.05), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(46, 230, 214, 0.25);
+  }
+
+  /* scrollbar técnica */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #283142 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #283142;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #3a4759;
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* Panel base estilo instrumento */
+  .panel {
+    @apply relative rounded-xl border border-base-700 bg-base-800/80 backdrop-blur-sm;
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+      0 20px 40px -24px rgba(0, 0, 0, 0.7);
+  }
+  .panel-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* etiqueta técnica en versalitas */
+  .label {
+    @apply font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint;
+  }
+  .label-cyan {
+    @apply font-mono text-[10.5px] uppercase tracking-[0.22em] text-cyan/80;
+  }
+
+  /* lectura numérica grande, estilo display */
+  .readout {
+    @apply font-mono tabular-nums tracking-tight;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hairline {
+    @apply border-base-700;
+  }
+
+  .corner {
+    @apply pointer-events-none absolute h-3 w-3 border-cyan/40;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .scanlines::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-[inherit];
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+}
