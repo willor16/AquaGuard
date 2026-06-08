@@ -29,3 +29,6 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# notas locales (no se publican)
+pasos firebase.txt

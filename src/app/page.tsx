@@ -4,9 +4,11 @@ import Link from "next/link";
 import { AuthGate } from "@/components/AuthGate";
 import { Shell } from "@/components/Shell";
 import { TankCard } from "@/components/TankCard";
-import { Spinner } from "@/components/ui";
+import { FleetEStop } from "@/components/FleetEStop";
+import { Led, Spinner } from "@/components/ui";
 import { useTanksList } from "@/lib/hooks";
-import { useAuth, canManageTanks } from "@/lib/auth";
+import { getData } from "@/lib/data";
+import { useAuth, canManageTanks, canControl } from "@/lib/auth";
 import { isOnline } from "@/lib/format";
 
 function Overview() {
@@ -20,19 +22,55 @@ function Overview() {
       ? Math.round(tanks.reduce((s, t) => s + (t.reported?.levelPct ?? 0), 0) / tanks.length)
       : 0;
 
+  const allowControl = canControl(user?.role);
+  const stopped = tanks.filter((t) => t.config?.emergencyStop === true).length;
+  const data = getData();
+  const stopAll = () =>
+    Promise.all(tanks.map((t) => data.setEmergencyStop(t.tankId, true)));
+  const resumeAll = () =>
+    Promise.all(tanks.map((t) => data.setEmergencyStop(t.tankId, false)));
+
   return (
     <Shell
       actions={
-        canManageTanks(user?.role) && (
-          <Link
-            href="/settings/tanks"
-            className="rounded-md border border-cyan/40 bg-cyan/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-cyan transition hover:bg-cyan/15"
-          >
-            + gestionar tanques
-          </Link>
-        )
+        <>
+          <FleetEStop
+            stopped={stopped}
+            total={tanks.length}
+            canControl={allowControl}
+            onStopAll={stopAll}
+            onResumeAll={resumeAll}
+          />
+          {canManageTanks(user?.role) && (
+            <Link
+              href="/settings/tanks"
+              className="rounded-md border border-cyan/40 bg-cyan/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-cyan transition hover:bg-cyan/15"
+            >
+              + gestionar tanques
+            </Link>
+          )}
+        </>
       }
     >
+      {/* banner de paro general */}
+      {stopped > 0 && (
+        <div
+          className={`mb-4 flex items-center gap-3 rounded-lg border-2 px-4 py-3 ${
+            stopped === tanks.length
+              ? "border-bad/60 bg-bad/15 shadow-glow-bad"
+              : "border-bad/40 bg-bad/10"
+          }`}
+        >
+          <Led tone="bad" pulse />
+          <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-bad">
+            {stopped === tanks.length ? "paro general activo" : `${stopped} en paro de emergencia`}{" "}
+            <span className="font-normal normal-case tracking-normal text-ink-dim">
+              — actuadores bloqueados en {stopped === tanks.length ? "toda la flota" : `${stopped} tanque${stopped > 1 ? "s" : ""}`} hasta reanudar.
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* barra de estado de la flota */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="tanques" value={tanks.length} tone="#d6e0ee" />
