@@ -3,13 +3,13 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "Control de Tanques · SCADA",
+  title: "AquaGuard · Control de Tanques",
   description:
     "Dashboard de monitoreo y control remoto de tanques de agua en tiempo real.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0e14",
+  themeColor: "#11151b",
   width: "device-width",
   initialScale: 1,
 };

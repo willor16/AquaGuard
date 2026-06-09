@@ -8,73 +8,66 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // SCADA / sala de control
+        // superficies — escala pizarra sobria (no negro puro)
         base: {
-          900: "#070a10", // fondo más profundo
-          850: "#0a0e14", // fondo principal
-          800: "#0e131c", // paneles
-          750: "#121826", // paneles elevados
-          700: "#1a2231", // bordes / superficies
-          600: "#283142", // bordes activos
+          900: "#0c0f14", // fondo más profundo
+          850: "#11151b", // fondo de página
+          800: "#161b22", // paneles
+          750: "#1b212a", // paneles elevados / chips
+          700: "#252c37", // bordes
+          600: "#323b48", // bordes activos
         },
         ink: {
-          DEFAULT: "#d6e0ee",
-          dim: "#8a97aa",
-          faint: "#5b6678",
+          DEFAULT: "#d8dee6",
+          dim: "#9aa6b4",
+          faint: "#69737f",
         },
-        // acentos técnicos
+        // acento único: azul acero (reemplaza el cian neón)
         cyan: {
-          DEFAULT: "#2ee6d6",
-          deep: "#14b8a6",
-          glow: "#5ffaee",
+          DEFAULT: "#4b8ef0",
+          deep: "#2f6bd4",
+          glow: "#6ea4f5",
         },
         amber: {
-          DEFAULT: "#ffb020",
-          deep: "#d98800",
+          DEFAULT: "#d6a23e",
+          deep: "#b07f28",
         },
-        good: "#22c98a",
-        warn: "#ffb020",
-        bad: "#ff4d5e",
-        info: "#4aa3ff",
+        good: "#48b07f",
+        warn: "#d6a23e",
+        bad: "#dd5a68",
+        info: "#5b93d6",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        panel: "0 1px 0 0 rgba(255,255,255,0.03) inset, 0 0 0 1px rgba(255,255,255,0.02)",
-        glow: "0 0 24px -6px rgba(46,230,214,0.55)",
-        "glow-amber": "0 0 24px -6px rgba(255,176,32,0.55)",
-        "glow-bad": "0 0 24px -6px rgba(255,77,94,0.55)",
-      },
-      backgroundImage: {
-        "grid-fine":
-          "linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px)",
+        // profundidad sutil, sin halos de neón
+        panel: "0 1px 2px 0 rgba(0,0,0,0.4)",
+        card: "0 1px 3px 0 rgba(0,0,0,0.35), 0 8px 24px -18px rgba(0,0,0,0.6)",
+        glow: "0 0 0 1px rgba(75,142,240,0.28)",
+        "glow-amber": "0 0 0 1px rgba(214,162,62,0.30)",
+        "glow-bad": "0 0 0 1px rgba(221,90,104,0.32)",
       },
       keyframes: {
         "pulse-led": {
           "0%,100%": { opacity: "1" },
-          "50%": { opacity: "0.35" },
+          "50%": { opacity: "0.4" },
         },
         wave: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
-        sweep: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(100%)" },
-        },
         "fade-up": {
-          from: { opacity: "0", transform: "translateY(6px)" },
+          from: { opacity: "0", transform: "translateY(4px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        "pulse-led": "pulse-led 1.6s ease-in-out infinite",
-        wave: "wave 7s linear infinite",
-        "wave-slow": "wave 11s linear infinite",
-        sweep: "sweep 4s linear infinite",
-        "fade-up": "fade-up 0.35s ease-out both",
+        "pulse-led": "pulse-led 2s ease-in-out infinite",
+        wave: "wave 8s linear infinite",
+        "wave-slow": "wave 13s linear infinite",
+        "fade-up": "fade-up 0.3s ease-out both",
       },
     },
   },

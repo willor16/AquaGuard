@@ -14,88 +14,66 @@
   }
   body {
     @apply bg-base-850 text-ink font-sans antialiased;
-    background-image:
-      radial-gradient(1200px 600px at 80% -10%, rgba(46, 230, 214, 0.06), transparent 60%),
-      radial-gradient(900px 500px at -10% 10%, rgba(74, 163, 255, 0.05), transparent 60%);
-    background-attachment: fixed;
   }
 
   ::selection {
-    background: rgba(46, 230, 214, 0.25);
+    background: rgba(75, 142, 240, 0.25);
   }
 
-  /* scrollbar técnica */
+  /* scrollbar discreta */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #283142 transparent;
+    scrollbar-color: #323b48 transparent;
   }
   *::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
   }
   *::-webkit-scrollbar-thumb {
-    background: #283142;
+    background: #2a3340;
     border-radius: 8px;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     background-clip: content-box;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: #3a4759;
+    background: #3a4554;
     background-clip: content-box;
   }
 }
 
 @layer components {
-  /* Panel base estilo instrumento */
+  /* panel base: tarjeta sobria con borde fino */
   .panel {
-    @apply relative rounded-xl border border-base-700 bg-base-800/80 backdrop-blur-sm;
-    box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
-      0 20px 40px -24px rgba(0, 0, 0, 0.7);
-  }
-  .panel-grid {
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-    background-size: 22px 22px;
+    @apply relative rounded-lg border border-base-700 bg-base-800 shadow-card;
   }
 
-  /* etiqueta técnica en versalitas */
+  /* etiqueta de sección, minúscula y legible */
   .label {
-    @apply font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint;
+    @apply text-[11px] font-medium text-ink-dim;
   }
   .label-cyan {
-    @apply font-mono text-[10.5px] uppercase tracking-[0.22em] text-cyan/80;
+    @apply text-[11px] font-medium text-cyan;
   }
 
-  /* lectura numérica grande, estilo display */
+  /* lectura numérica: tipografía normal, cifras tabulares */
   .readout {
-    @apply font-mono tabular-nums tracking-tight;
+    @apply font-sans tabular-nums tracking-tight;
     font-variant-numeric: tabular-nums;
   }
 
-  .hairline {
-    @apply border-base-700;
+  /* campo de formulario unificado */
+  .input,
+  .inp {
+    @apply w-full rounded-md border border-base-600 bg-base-900/70 px-3 py-2 text-sm text-ink outline-none transition;
+    @apply placeholder:text-ink-faint focus:border-cyan/70 focus:ring-2 focus:ring-cyan/20;
   }
-
-  .corner {
-    @apply pointer-events-none absolute h-3 w-3 border-cyan/40;
+  .inp[type="datetime-local"] {
+    color-scheme: dark;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-  .scanlines::after {
-    content: "";
-    @apply pointer-events-none absolute inset-0 rounded-[inherit];
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.015) 0px,
-      rgba(255, 255, 255, 0.015) 1px,
-      transparent 1px,
-      transparent 3px
-    );
   }
 }

@@ -55,21 +55,21 @@ export function FleetEStop({
       {stopped > 0 && (
         <button
           onClick={() => setConfirm("resume")}
-          className="rounded-md border border-good/50 bg-good/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-good transition hover:bg-good/20"
+          className="rounded-md border border-good/50 bg-good/10 px-3 py-1.5 text-[12px] font-medium text-good transition hover:bg-good/15"
         >
-          ⟲ reanudar flota
+          reanudar flota
         </button>
       )}
       {!allStopped && (
         <button
           onClick={() => setConfirm("stop")}
-          className="group inline-flex items-center gap-2 rounded-md border-2 border-bad/60 bg-bad/10 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-bad shadow-glow-bad transition hover:border-bad hover:bg-bad/20"
+          className="inline-flex items-center gap-2 rounded-md border border-bad/50 bg-bad/10 px-3 py-1.5 text-[12px] font-semibold text-bad transition hover:bg-bad/15"
         >
-          <span className="grid h-4 w-4 place-items-center rounded-full border-2 border-bad text-[9px] transition group-hover:animate-pulse-led">
+          <span className="grid h-4 w-4 place-items-center rounded-full border border-bad text-[9px]">
             ✕
           </span>
           paro general
-          {stopped > 0 && <span className="text-ink-faint">· {stopped} en paro</span>}
+          {stopped > 0 && <span className="font-normal text-ink-faint">· {stopped}</span>}
         </button>
       )}
     </div>
@@ -89,19 +89,19 @@ function Confirm({
 }) {
   const cls =
     tone === "bad"
-      ? "border-bad/60 bg-bad/15 text-bad hover:bg-bad/25"
-      : "border-good/60 bg-good/15 text-good hover:bg-good/25";
+      ? "border-bad/60 bg-bad/15 text-bad hover:bg-bad/20"
+      : "border-good/60 bg-good/15 text-good hover:bg-good/20";
   return (
     <div className="flex items-center gap-2">
       <button
         onClick={onConfirm}
-        className={`rounded-md border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] transition ${cls}`}
+        className={`rounded-md border px-3 py-1.5 text-[12px] font-semibold transition ${cls}`}
       >
         confirmar · {label}
       </button>
       <button
         onClick={onCancel}
-        className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint transition hover:text-ink"
+        className="text-[12px] text-ink-faint transition hover:text-ink"
       >
         cancelar
       </button>

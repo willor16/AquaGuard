@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui";
-import { useTicker } from "@/lib/hooks";
-import { clockTime } from "@/lib/format";
 
 export default function LoginPage() {
   const { signIn, user, mode } = useAuth();
@@ -14,7 +12,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const t = useTicker(1000);
 
   useEffect(() => {
     if (user) router.replace("/");
@@ -34,37 +31,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden px-4">
-      {/* fondo: rejilla + reactor */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-fine [background-size:32px_32px] opacity-[0.5]" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan/5 blur-[120px]" />
-
-      <div className="relative w-full max-w-md">
-        {/* encabezado */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-lg border border-cyan/40 bg-cyan/10 font-mono text-xl text-cyan shadow-glow">
-              ◈
-            </span>
-            <div className="leading-none">
-              <div className="font-mono text-lg font-bold tracking-[0.2em] text-ink">
-                TANK<span className="text-cyan">·</span>CTRL
-              </div>
-              <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.28em] text-ink-faint">
-                control supervisor de tanques
-              </div>
-            </div>
-          </div>
-          <span className="font-mono text-xs tabular-nums text-ink-faint">
-            {clockTime(Math.floor(t / 1000))}
+    <div className="grid min-h-screen place-items-center px-4">
+      <div className="w-full max-w-sm">
+        {/* marca */}
+        <div className="mb-6 flex items-center gap-3">
+          <span className="grid h-11 w-11 place-items-center rounded-lg bg-cyan/15 text-cyan">
+            <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden>
+              <path
+                d="M8 1.5C8 1.5 3 6.5 3 10a5 5 0 0 0 10 0c0-3.5-5-8.5-5-8.5Z"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinejoin="round"
+              />
+            </svg>
           </span>
+          <div className="leading-tight">
+            <div className="text-lg font-semibold tracking-tight text-ink">AquaGuard</div>
+            <div className="text-[12px] text-ink-faint">control supervisor de tanques</div>
+          </div>
         </div>
 
-        <form onSubmit={submit} className="panel scanlines panel-grid p-6">
+        <form onSubmit={submit} className="panel p-6">
           <div className="mb-5 flex items-center justify-between">
-            <span className="label-cyan">acceso al sistema</span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
-              {mode === "demo" ? "● demo local" : "● firebase auth"}
+            <span className="text-sm font-semibold text-ink">Iniciar sesión</span>
+            <span className="text-[11px] text-ink-faint">
+              {mode === "demo" ? "demo local" : "firebase auth"}
             </span>
           </div>
 
@@ -75,7 +66,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="operador@dominio.gt"
             autoComplete="username"
-            className="mb-4 w-full rounded-lg border border-base-600 bg-base-900/60 px-3.5 py-2.5 font-mono text-sm text-ink outline-none transition placeholder:text-ink-faint focus:border-cyan/60 focus:ring-2 focus:ring-cyan/20"
+            className="input mb-4"
           />
 
           <label className="mb-1.5 block label">contraseña</label>
@@ -85,11 +76,11 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder={mode === "demo" ? "(opcional en demo)" : "••••••••"}
             autoComplete="current-password"
-            className="mb-5 w-full rounded-lg border border-base-600 bg-base-900/60 px-3.5 py-2.5 font-mono text-sm text-ink outline-none transition placeholder:text-ink-faint focus:border-cyan/60 focus:ring-2 focus:ring-cyan/20"
+            className="input mb-5"
           />
 
           {error && (
-            <div className="mb-4 rounded-md border border-bad/40 bg-bad/10 px-3 py-2 font-mono text-[11px] text-bad">
+            <div className="mb-4 rounded-md border border-bad/40 bg-bad/10 px-3 py-2 text-[12px] text-bad">
               {error}
             </div>
           )}
@@ -105,14 +96,14 @@ export default function LoginPage() {
                 setEmail("operador@demo.local");
                 setTimeout(submit, 0);
               }}
-              className="mt-3 w-full rounded-lg border border-dashed border-base-600 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
+              className="mt-3 w-full rounded-md border border-dashed border-base-600 px-4 py-2.5 text-[13px] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
             >
               entrar como operador demo
             </button>
           )}
         </form>
 
-        <p className="mt-4 text-center font-mono text-[10px] leading-relaxed text-ink-faint">
+        <p className="mt-4 text-center text-[12px] leading-relaxed text-ink-faint">
           {mode === "demo"
             ? "sin credenciales firebase · datos simulados en vivo"
             : "autenticación gestionada por firebase · reglas activas"}

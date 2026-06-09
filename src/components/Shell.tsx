@@ -25,78 +25,81 @@ export function Shell({
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-base-700/70 bg-base-850/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
+      <header className="sticky top-0 z-30 border-b border-base-700 bg-base-850/90 backdrop-blur">
+        <div className="mx-auto flex min-h-14 max-w-[1320px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6">
           {/* marca */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <span className="grid h-8 w-8 place-items-center rounded-md border border-cyan/40 bg-cyan/10 font-mono text-cyan shadow-glow">
-              ◈
+          <Link href="/" className="flex shrink-0 items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center rounded-md bg-cyan/15 text-cyan">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path
+                  d="M8 1.5C8 1.5 3 6.5 3 10a5 5 0 0 0 10 0c0-3.5-5-8.5-5-8.5Z"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </span>
-            <div className="leading-none">
-              <div className="font-mono text-sm font-bold tracking-[0.18em] text-ink">
-                TANK<span className="text-cyan">·</span>CTRL
+            <div className="leading-tight">
+              <div className="text-sm font-semibold tracking-tight text-ink">
+                AquaGuard
               </div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.24em] text-ink-faint">
-                supervisión hídrica
-              </div>
+              <div className="text-[10px] text-ink-faint">control de tanques</div>
             </div>
           </Link>
 
-          {back && (
-            <>
+          {/* miga de pan */}
+          {(back || title) && (
+            <nav className="flex min-w-0 items-center gap-2 text-[13px] text-ink-dim">
               <span className="text-base-600">/</span>
-              <Link
-                href={back.href}
-                className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim transition hover:text-cyan"
-              >
-                ← {back.label}
-              </Link>
-            </>
-          )}
-          {title && (
-            <>
-              <span className="text-base-600">/</span>
-              <span className="truncate font-mono text-[11px] uppercase tracking-[0.14em] text-ink">
-                {title}
-              </span>
-            </>
+              {back && (
+                <Link href={back.href} className="transition hover:text-cyan">
+                  {back.label}
+                </Link>
+              )}
+              {title && (
+                <>
+                  {back && <span className="text-base-600">/</span>}
+                  <span className="truncate text-ink">{title}</span>
+                </>
+              )}
+            </nav>
           )}
 
-          <div className="ml-auto flex items-center gap-3 sm:gap-5">
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2 sm:gap-3">
             {actions}
-            {/* badge de fuente de datos */}
+
+            {/* fuente de datos */}
             <span
-              className="hidden items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] sm:inline-flex"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium"
               style={{
-                borderColor: mode === "demo" ? "#ffb02055" : "#22c98a55",
-                color: mode === "demo" ? "#ffb020" : "#22c98a",
-                background: mode === "demo" ? "#ffb02012" : "#22c98a12",
+                color: mode === "demo" ? "#d6a23e" : "#48b07f",
+                background: mode === "demo" ? "#d6a23e1a" : "#48b07f1a",
               }}
             >
-              <Led tone={mode === "demo" ? "warn" : "good"} pulse />
-              {mode === "demo" ? "modo demo" : "firebase"}
+              <Led tone={mode === "demo" ? "warn" : "good"} pulse={mode !== "demo"} />
+              {mode === "demo" ? "demo" : "firebase"}
             </span>
 
             {/* reloj */}
-            <span className="hidden font-mono text-xs tabular-nums text-ink-dim md:block">
+            <span className="hidden tabular-nums text-[13px] text-ink-dim md:block">
               {clockTime(Math.floor(t / 1000))}
             </span>
 
             {/* usuario */}
             {user && (
-              <div className="flex items-center gap-3">
-                <div className="hidden text-right leading-none sm:block">
-                  <div className="font-mono text-[11px] text-ink">{user.email}</div>
-                  <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan/80">
-                    {user.role}
+              <div className="flex items-center gap-2.5">
+                <div className="hidden text-right leading-tight sm:block">
+                  <div className="max-w-[160px] truncate text-[12px] text-ink">
+                    {user.email}
                   </div>
+                  <div className="text-[10px] capitalize text-cyan">{user.role}</div>
                 </div>
                 <button
                   onClick={async () => {
                     await signOut();
                     router.push("/login");
                   }}
-                  className="rounded-md border border-base-600 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-bad/50 hover:text-bad"
+                  className="rounded-md border border-base-600 px-2.5 py-1.5 text-[12px] text-ink-dim transition hover:border-bad/50 hover:text-bad"
                 >
                   salir
                 </button>
@@ -106,7 +109,7 @@ export function Shell({
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">{children}</main>
+      <main className="mx-auto max-w-[1320px] px-4 py-6 sm:px-6">{children}</main>
     </div>
   );
 }

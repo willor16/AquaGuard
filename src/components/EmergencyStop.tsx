@@ -26,13 +26,13 @@ export function EmergencyStop({
                 onResume();
                 setConfirm(false);
               }}
-              className="rounded-lg border border-good/60 bg-good/15 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-good transition hover:bg-good/25"
+              className="rounded-md border border-good/60 bg-good/15 px-3.5 py-2 text-[13px] font-semibold text-good transition hover:bg-good/20"
             >
               confirmar reanudación
             </button>
             <button
               onClick={() => setConfirm(false)}
-              className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint hover:text-ink"
+              className="text-[12px] text-ink-faint transition hover:text-ink"
             >
               cancelar
             </button>
@@ -41,9 +41,9 @@ export function EmergencyStop({
           <button
             disabled={!canControl}
             onClick={() => setConfirm(true)}
-            className="rounded-lg border border-good/50 bg-good/10 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-good transition hover:bg-good/20 disabled:opacity-40"
+            className="rounded-md border border-good/50 bg-good/10 px-3.5 py-2 text-[13px] font-medium text-good transition hover:bg-good/15 disabled:opacity-40"
           >
-            ⟲ reanudar operación
+            reanudar operación
           </button>
         )}
       </div>
@@ -54,9 +54,9 @@ export function EmergencyStop({
     <button
       disabled={!canControl}
       onClick={onStop}
-      className="group inline-flex items-center gap-2.5 rounded-lg border-2 border-bad/60 bg-bad/10 px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-bad shadow-glow-bad transition hover:border-bad hover:bg-bad/20 active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+      className="inline-flex items-center gap-2 rounded-md border border-bad/50 bg-bad/10 px-3.5 py-2 text-[13px] font-semibold text-bad transition hover:bg-bad/15 active:scale-[0.98] disabled:opacity-40"
     >
-      <span className="grid h-5 w-5 place-items-center rounded-full border-2 border-bad text-[10px] transition group-hover:animate-pulse-led">
+      <span className="grid h-5 w-5 place-items-center rounded-full border border-bad text-[10px]">
         ✕
       </span>
       paro de emergencia

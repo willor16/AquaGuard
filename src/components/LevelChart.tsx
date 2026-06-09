@@ -66,8 +66,8 @@ export function LevelChart({
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="none" style={{ height }}>
         <defs>
           <linearGradient id="lvlFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2ee6d6" stopOpacity="0.32" />
-            <stop offset="100%" stopColor="#2ee6d6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#4b8ef0" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#4b8ef0" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -96,18 +96,18 @@ export function LevelChart({
 
         {/* umbrales */}
         {stopPct !== undefined && (
-          <line x1={padL} x2={W - padR} y1={yFor(stopPct)} y2={yFor(stopPct)} stroke="#ff8a3d" strokeWidth={1} strokeDasharray="5 5" opacity={0.6} />
+          <line x1={padL} x2={W - padR} y1={yFor(stopPct)} y2={yFor(stopPct)} stroke="#d6a23e" strokeWidth={1} strokeDasharray="5 5" opacity={0.55} />
         )}
         {startPct !== undefined && (
-          <line x1={padL} x2={W - padR} y1={yFor(startPct)} y2={yFor(startPct)} stroke="#22c98a" strokeWidth={1} strokeDasharray="5 5" opacity={0.6} />
+          <line x1={padL} x2={W - padR} y1={yFor(startPct)} y2={yFor(startPct)} stroke="#48b07f" strokeWidth={1} strokeDasharray="5 5" opacity={0.55} />
         )}
 
         {points.length >= 2 ? (
           <>
             <path d={area} fill="url(#lvlFill)" />
-            <path d={path} fill="none" stroke="#2ee6d6" strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round" />
-            <circle cx={lastX} cy={lastY} r={3.5} fill="#5ffaee" />
-            <circle cx={lastX} cy={lastY} r={6} fill="none" stroke="#5ffaee" strokeOpacity={0.4} />
+            <path d={path} fill="none" stroke="#4b8ef0" strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round" />
+            <circle cx={lastX} cy={lastY} r={3.5} fill="#6ea4f5" />
+            <circle cx={lastX} cy={lastY} r={6} fill="none" stroke="#6ea4f5" strokeOpacity={0.4} />
           </>
         ) : (
           <text x={W / 2} y={H / 2} textAnchor="middle" className="fill-ink-faint" style={{ fontSize: 12, fontFamily: "var(--font-mono)" }}>

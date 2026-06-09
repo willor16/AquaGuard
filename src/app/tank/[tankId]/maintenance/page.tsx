@@ -118,41 +118,41 @@ function Maintenance({ tankId }: { tankId: string }) {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold text-ink">Mantenimiento · {tank?.meta.name}</h1>
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
+        <h1 className="text-xl font-semibold text-ink">Mantenimiento · {tank?.meta.name}</h1>
+        <p className="text-[13px] text-ink-dim">
           programa ventanas · el llenado automático se suspende mientras están activas
         </p>
       </div>
 
       {/* estado */}
       {active ? (
-        <div className="flex items-center gap-3 rounded-lg border border-amber/50 bg-amber/10 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-[13px]">
           <Led tone="warn" pulse />
-          <div className="font-mono text-xs text-amber">
-            MANTENIMIENTO EN CURSO · {active.title}{" "}
+          <span className="text-amber">
+            <span className="font-semibold">Mantenimiento en curso</span> · {active.title}{" "}
             <span className="text-ink-dim">
               — {active.disableAuto ? "llenado automático en pausa" : "sin suspender auto"} ·{" "}
               {fmtRange(active)}
             </span>
-          </div>
+          </span>
         </div>
       ) : next ? (
-        <div className="flex items-center gap-3 rounded-lg border border-base-700 bg-base-800/60 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-base-700 bg-base-800 px-4 py-3 text-[13px]">
           <Led tone="info" />
-          <div className="font-mono text-xs text-ink-dim">
-            PRÓXIMO · <span className="text-ink">{next.title}</span> — {fmtRange(next)}
-          </div>
+          <span className="text-ink-dim">
+            Próximo · <span className="text-ink">{next.title}</span> — {fmtRange(next)}
+          </span>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-lg border border-base-700 bg-base-800/60 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-base-700 bg-base-800 px-4 py-3 text-[13px]">
           <Led tone="good" />
-          <span className="font-mono text-xs text-ink-dim">sin mantenimientos programados</span>
+          <span className="text-ink-dim">sin mantenimientos programados</span>
         </div>
       )}
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,400px)]">
+      <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,380px)]">
         {/* calendario */}
-        <Instrument label="calendario de mantenimiento">
+        <Instrument label="Calendario de mantenimiento">
           <Calendar
             windows={list}
             selectedDayS={selectedDay}
@@ -167,7 +167,7 @@ function Maintenance({ tankId }: { tankId: string }) {
         {/* programar + lista */}
         <div className="space-y-5">
           {editable && (
-            <Instrument label={form.id ? "editar mantenimiento" : "programar mantenimiento"} glow="cyan">
+            <Instrument label={form.id ? "Editar mantenimiento" : "Programar mantenimiento"}>
               <div className="space-y-3.5">
                 <Field label="actividad">
                   <input
@@ -206,19 +206,19 @@ function Maintenance({ tankId }: { tankId: string }) {
 
                 <button
                   onClick={() => setForm({ ...form, disableAuto: !form.disableAuto })}
-                  className={`flex w-full items-center justify-between rounded-lg border px-3.5 py-2.5 transition ${
+                  className={`flex w-full items-center justify-between rounded-md border px-3.5 py-2.5 text-left transition ${
                     form.disableAuto ? "border-amber/50 bg-amber/[0.06]" : "border-base-700"
                   }`}
                 >
-                  <span className="text-left">
-                    <span className="block text-sm text-ink">suspender llenado automático</span>
-                    <span className="block font-mono text-[10px] text-ink-faint">
+                  <span>
+                    <span className="block text-[13px] text-ink">suspender llenado automático</span>
+                    <span className="block text-[11px] text-ink-faint">
                       durante la ventana el tanque no se llenará solo
                     </span>
                   </span>
                   <span
                     className={`relative h-6 w-11 shrink-0 rounded-full border transition ${
-                      form.disableAuto ? "border-amber/60 bg-amber/20" : "border-base-600 bg-base-800"
+                      form.disableAuto ? "border-amber/60 bg-amber/25" : "border-base-600 bg-base-800"
                     }`}
                   >
                     <span
@@ -244,11 +244,9 @@ function Maintenance({ tankId }: { tankId: string }) {
           )}
 
           {/* lista */}
-          <Instrument label={`actividades programadas · ${list.length}`}>
+          <Instrument label={`Actividades programadas · ${list.length}`}>
             {list.length === 0 ? (
-              <p className="py-4 text-center font-mono text-xs text-ink-faint">
-                sin actividades
-              </p>
+              <p className="py-4 text-center text-[13px] text-ink-faint">sin actividades</p>
             ) : (
               <ul className="space-y-2">
                 {list.map((w) => {
@@ -259,28 +257,26 @@ function Maintenance({ tankId }: { tankId: string }) {
                   return (
                     <li
                       key={w.id}
-                      className={`rounded-lg border px-3.5 py-3 ${
-                        isActive ? "border-amber/40 bg-amber/[0.06]" : "border-base-700/70"
+                      className={`rounded-md border px-3.5 py-3 ${
+                        isActive ? "border-amber/40 bg-amber/[0.06]" : "border-base-700"
                       } ${isPast ? "opacity-60" : ""}`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <Led tone={tone as "warn" | "idle" | "info"} pulse={isActive} size={7} />
-                            <span className="truncate font-semibold text-ink">{w.title}</span>
+                            <span className="truncate font-medium text-ink">{w.title}</span>
                           </div>
-                          <div className="mt-1 font-mono text-[11px] text-ink-dim">
+                          <div className="mt-1 text-[12px] text-ink-dim">
                             {fmtRange(w)} · {fmtDuration(w)}
                           </div>
                           {w.note && (
-                            <div className="mt-0.5 font-mono text-[10px] text-ink-faint">{w.note}</div>
+                            <div className="mt-0.5 text-[11px] text-ink-faint">{w.note}</div>
                           )}
                           <div className="mt-1 flex items-center gap-2">
-                            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-faint">
-                              {stateLabel}
-                            </span>
+                            <span className="text-[11px] text-ink-faint">{stateLabel}</span>
                             {w.disableAuto && (
-                              <span className="rounded bg-amber/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-amber">
+                              <span className="rounded bg-amber/15 px-1.5 py-0.5 text-[10px] text-amber">
                                 auto en pausa
                               </span>
                             )}
@@ -290,13 +286,13 @@ function Maintenance({ tankId }: { tankId: string }) {
                           <div className="flex shrink-0 flex-col items-end gap-1">
                             <button
                               onClick={() => edit(w)}
-                              className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim transition hover:text-cyan"
+                              className="text-[12px] text-ink-dim transition hover:text-cyan"
                             >
                               editar
                             </button>
                             <button
                               onClick={() => remove(w.id)}
-                              className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint transition hover:text-bad"
+                              className="text-[12px] text-ink-faint transition hover:text-bad"
                             >
                               eliminar
                             </button>
@@ -311,26 +307,6 @@ function Maintenance({ tankId }: { tankId: string }) {
           </Instrument>
         </div>
       </div>
-
-      <style jsx>{`
-        :global(.inp) {
-          width: 100%;
-          border-radius: 0.5rem;
-          border: 1px solid #283142;
-          background: rgba(7, 10, 16, 0.6);
-          padding: 0.55rem 0.75rem;
-          font-family: var(--font-mono);
-          font-size: 0.85rem;
-          color: #d6e0ee;
-          outline: none;
-        }
-        :global(.inp:focus) {
-          border-color: rgba(46, 230, 214, 0.6);
-        }
-        :global(.inp[type="datetime-local"]) {
-          color-scheme: dark;
-        }
-      `}</style>
     </div>
   );
 }

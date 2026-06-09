@@ -11,17 +11,17 @@ import { clockTime } from "@/lib/format";
 import type { EventType } from "@/lib/types";
 
 const EVENT_META: Record<EventType, { icon: string; color: string; label: string }> = {
-  PUMP_ON: { icon: "◉", color: "#22c98a", label: "Bomba encendida" },
-  PUMP_OFF: { icon: "○", color: "#5b6678", label: "Bomba apagada" },
-  VALVE_ON: { icon: "⬡", color: "#22c98a", label: "Válvula abierta" },
-  VALVE_OFF: { icon: "⬡", color: "#5b6678", label: "Válvula cerrada" },
-  ALERT: { icon: "▲", color: "#ff4d5e", label: "Alerta" },
-  MODE_CHANGE: { icon: "⇄", color: "#4aa3ff", label: "Cambio de modo" },
-  CONFIG_CHANGE: { icon: "⚙", color: "#2ee6d6", label: "Configuración" },
-  ESTOP_ON: { icon: "✕", color: "#ff4d5e", label: "Paro de emergencia" },
-  ESTOP_OFF: { icon: "⟲", color: "#22c98a", label: "Operación reanudada" },
-  MAINT_START: { icon: "⚒", color: "#ffb020", label: "Mantenimiento iniciado" },
-  MAINT_END: { icon: "⚒", color: "#5b6678", label: "Mantenimiento finalizado" },
+  PUMP_ON: { icon: "▲", color: "#48b07f", label: "Bomba encendida" },
+  PUMP_OFF: { icon: "▽", color: "#69737f", label: "Bomba apagada" },
+  VALVE_ON: { icon: "▲", color: "#48b07f", label: "Válvula abierta" },
+  VALVE_OFF: { icon: "▽", color: "#69737f", label: "Válvula cerrada" },
+  ALERT: { icon: "!", color: "#dd5a68", label: "Alerta" },
+  MODE_CHANGE: { icon: "⇄", color: "#5b93d6", label: "Cambio de modo" },
+  CONFIG_CHANGE: { icon: "⚙", color: "#4b8ef0", label: "Configuración" },
+  ESTOP_ON: { icon: "✕", color: "#dd5a68", label: "Paro de emergencia" },
+  ESTOP_OFF: { icon: "⟲", color: "#48b07f", label: "Operación reanudada" },
+  MAINT_START: { icon: "⚒", color: "#d6a23e", label: "Mantenimiento iniciado" },
+  MAINT_END: { icon: "⚒", color: "#69737f", label: "Mantenimiento finalizado" },
 };
 
 function History({ tankId }: { tankId: string }) {
@@ -57,10 +57,8 @@ function History({ tankId }: { tankId: string }) {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold text-ink">Histórico · {tank?.meta.name}</h1>
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
-          tendencia de nivel y bitácora de eventos
-        </p>
+        <h1 className="text-xl font-semibold text-ink">Histórico · {tank?.meta.name}</h1>
+        <p className="text-[13px] text-ink-dim">tendencia de nivel y bitácora de eventos</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -69,7 +67,7 @@ function History({ tankId }: { tankId: string }) {
         <Metric label="máximo" value={stats.max.toFixed(0)} unit="%" tone="good" />
       </div>
 
-      <Instrument label="nivel en el tiempo">
+      <Instrument label="Nivel en el tiempo">
         <LevelChart
           points={points}
           startPct={tank?.config.startPct}
@@ -78,7 +76,7 @@ function History({ tankId }: { tankId: string }) {
         />
       </Instrument>
 
-      <Instrument label={`bitácora de eventos · ${events.length}`}>
+      <Instrument label={`Bitácora de eventos · ${events.length}`}>
         {events.length === 0 ? (
           <p className="py-6 text-center font-mono text-xs text-ink-faint">sin eventos registrados</p>
         ) : (

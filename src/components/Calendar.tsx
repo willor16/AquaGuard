@@ -52,14 +52,14 @@ export function Calendar({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-mono text-sm font-semibold tracking-wide text-ink">
-          {MONTHS[view.m]} <span className="text-ink-faint">{view.y}</span>
+        <span className="text-sm font-semibold text-ink">
+          {MONTHS[view.m]} <span className="font-normal text-ink-faint">{view.y}</span>
         </span>
         <div className="flex items-center gap-1">
           <NavBtn onClick={() => shift(-1)}>‹</NavBtn>
           <button
             onClick={() => setView({ y: today.getFullYear(), m: today.getMonth() })}
-            className="rounded-md border border-base-600 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
+            className="rounded-md border border-base-600 px-2.5 py-1 text-[12px] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
           >
             hoy
           </button>
@@ -69,7 +69,7 @@ export function Calendar({
 
       <div className="mb-1.5 grid grid-cols-7 gap-1.5">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="text-center font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+          <div key={w} className="text-center text-[11px] text-ink-faint">
             {w}
           </div>
         ))}
@@ -90,23 +90,23 @@ export function Calendar({
             <button
               key={i}
               onClick={() => onPickDay?.(dayS)}
-              className={`relative aspect-square rounded-lg border p-1 text-left transition ${
+              className={`relative aspect-square rounded-md border p-1 text-left transition ${
                 isSelected
                   ? "border-cyan/70 bg-cyan/10"
                   : hasMaint
-                  ? "border-amber/40 bg-amber/[0.07] hover:border-amber/70"
-                  : "border-base-700/70 hover:border-base-600"
+                  ? "border-amber/40 bg-amber/[0.07] hover:border-amber/60"
+                  : "border-base-700 hover:border-base-600"
               } ${isPast ? "opacity-55" : ""}`}
             >
               <span
-                className={`font-mono text-[11px] tabular-nums ${
+                className={`text-[12px] tabular-nums ${
                   isToday ? "font-bold text-cyan" : hasMaint ? "text-amber" : "text-ink-dim"
                 }`}
               >
                 {d}
               </span>
               {isToday && (
-                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-cyan shadow-glow" />
+                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-cyan" />
               )}
               {hasMaint && (
                 <span className="absolute bottom-1 left-1 right-1 flex items-center gap-0.5">
@@ -114,7 +114,7 @@ export function Calendar({
                     <span
                       key={k}
                       className="h-1 flex-1 rounded-full"
-                      style={{ background: isActive ? "#ffb020" : "#ffb02080" }}
+                      style={{ background: isActive ? "#d6a23e" : "#d6a23e80" }}
                     />
                   ))}
                 </span>
@@ -124,7 +124,7 @@ export function Calendar({
         })}
       </div>
 
-      <div className="mt-3 flex items-center gap-4 font-mono text-[10px] text-ink-faint">
+      <div className="mt-3 flex items-center gap-4 text-[11px] text-ink-faint">
         <span className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-cyan" /> hoy
         </span>
@@ -140,7 +140,7 @@ function NavBtn({ children, onClick }: { children: React.ReactNode; onClick: () 
   return (
     <button
       onClick={onClick}
-      className="grid h-7 w-7 place-items-center rounded-md border border-base-600 font-mono text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
+      className="grid h-7 w-7 place-items-center rounded-md border border-base-600 text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
     >
       {children}
     </button>

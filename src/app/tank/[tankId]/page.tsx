@@ -17,6 +17,9 @@ import { isOnline, relativeTime, fmt } from "@/lib/format";
 import { activeMaintenance, nextMaintenance, fmtRange } from "@/lib/maintenance";
 import type { Mode } from "@/lib/types";
 
+const navLink =
+  "rounded-md border border-base-600 px-3 py-1.5 text-[12px] text-ink-dim transition hover:border-cyan/50 hover:text-cyan";
+
 function Dashboard({ tankId }: { tankId: string }) {
   const { tank, loading } = useTank(tankId);
   const { user } = useAuth();
@@ -33,9 +36,8 @@ function Dashboard({ tankId }: { tankId: string }) {
   if (!tank) {
     return (
       <div className="panel grid place-items-center gap-2 py-20 text-center">
-        <span className="font-mono text-3xl text-ink-faint">⌀</span>
-        <p className="font-mono text-sm text-ink-dim">Tanque no encontrado: {tankId}</p>
-        <Link href="/" className="font-mono text-xs uppercase tracking-[0.14em] text-cyan">
+        <p className="text-sm text-ink-dim">Tanque no encontrado: {tankId}</p>
+        <Link href="/" className="text-[13px] text-cyan">
           ← volver a la flota
         </Link>
       </div>
@@ -66,36 +68,27 @@ function Dashboard({ tankId }: { tankId: string }) {
   return (
     <div className="space-y-5">
       {/* cabecera del tanque */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-ink">{tank.meta.name}</h1>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
-            {tank.meta.location || tankId} · id:{tankId}
+          <h1 className="text-xl font-semibold text-ink">{tank.meta.name}</h1>
+          <p className="text-[13px] text-ink-dim">
+            {tank.meta.location || tankId} · <span className="text-ink-faint">id: {tankId}</span>
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Pill tone={online ? "good" : "bad"}>
-            <Led tone={online ? "good" : "bad"} pulse={online} size={7} />
-            {online ? "online" : "offline"}
+        <div className="flex flex-wrap items-center gap-2">
+          <Pill tone={online ? "good" : "idle"}>
+            <Led tone={online ? "good" : "idle"} pulse={online} size={7} />
+            {online ? "en línea" : "fuera de línea"}
           </Pill>
           <Pill tone={reported.mode === "auto" ? "cyan" : "info"}>{reported.mode}</Pill>
-          <Link
-            href={`/tank/${tankId}/history`}
-            className="rounded-md border border-base-600 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
-          >
+          <Link href={`/tank/${tankId}/history`} className={navLink}>
             histórico
           </Link>
-          <Link
-            href={`/tank/${tankId}/maintenance`}
-            className="rounded-md border border-base-600 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-amber/50 hover:text-amber"
-          >
+          <Link href={`/tank/${tankId}/maintenance`} className={navLink}>
             mantenimiento
           </Link>
           {canConfigure(user?.role) && (
-            <Link
-              href={`/tank/${tankId}/config`}
-              className="rounded-md border border-base-600 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
-            >
+            <Link href={`/tank/${tankId}/config`} className={navLink}>
               configurar
             </Link>
           )}
@@ -104,15 +97,15 @@ function Dashboard({ tankId }: { tankId: string }) {
 
       {/* banner paro de emergencia */}
       {eStop && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-2 border-bad/60 bg-bad/15 px-4 py-3 shadow-glow-bad">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-bad/50 bg-bad/10 px-4 py-3">
+          <div className="flex items-center gap-3 text-[13px]">
             <Led tone="bad" pulse />
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-bad">
-              paro de emergencia activo ·{" "}
-              <span className="font-normal normal-case tracking-normal text-ink-dim">
-                todos los actuadores están bloqueados hasta reanudar la operación.
+            <span className="text-bad">
+              <span className="font-semibold">Paro de emergencia activo</span>{" "}
+              <span className="text-ink-dim">
+                — todos los actuadores están bloqueados hasta reanudar la operación.
               </span>
-            </div>
+            </span>
           </div>
           <EmergencyStop
             active
@@ -125,39 +118,32 @@ function Dashboard({ tankId }: { tankId: string }) {
 
       {/* banner mantenimiento en curso */}
       {!eStop && autoPaused && (
-        <div className="flex items-center gap-3 rounded-lg border border-amber/50 bg-amber/10 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-[13px]">
           <Led tone="warn" pulse />
-          <div className="font-mono text-xs text-amber">
-            MANTENIMIENTO EN CURSO · {maint!.title}{" "}
-            <span className="text-ink-dim">
-              — llenado automático en pausa ({fmtRange(maint!)}).
-            </span>
-          </div>
+          <span className="text-amber">
+            <span className="font-semibold">Mantenimiento en curso</span> · {maint!.title}{" "}
+            <span className="text-ink-dim">— llenado automático en pausa ({fmtRange(maint!)}).</span>
+          </span>
         </div>
       )}
 
       {/* banner offline */}
       {!eStop && online === false && (
-        <div className="flex items-center gap-3 rounded-lg border border-bad/40 bg-bad/10 px-4 py-3">
-          <Led tone="bad" pulse />
-          <div className="font-mono text-xs text-bad">
-            DISPOSITIVO SIN CONEXIÓN ·{" "}
-            <span className="text-ink-dim">
-              último reporte {relativeTime(reported.lastSeen)}. Los controles están
-              deshabilitados; el equipo opera localmente con sus protecciones.
-            </span>
-          </div>
+        <div className="flex items-center gap-3 rounded-lg border border-base-700 bg-base-800 px-4 py-3 text-[13px]">
+          <Led tone="idle" />
+          <span className="text-ink-dim">
+            <span className="font-semibold text-ink">Dispositivo sin conexión</span> — último reporte{" "}
+            {relativeTime(reported.lastSeen)}. Los controles están deshabilitados; el equipo opera
+            localmente con sus protecciones.
+          </span>
         </div>
       )}
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,380px)_1fr]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,360px)_1fr]">
         {/* MEDIDOR */}
-        <Instrument label="nivel del tanque" glow={online ? "cyan" : undefined}
-          right={
-            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
-              {relativeTime(reported.lastSeen)}
-            </span>
-          }
+        <Instrument
+          label="Nivel del tanque"
+          right={<span className="text-[12px] text-ink-faint">{relativeTime(reported.lastSeen)}</span>}
         >
           <TankGauge
             levelPct={reported.levelPct}
@@ -180,8 +166,7 @@ function Dashboard({ tankId }: { tankId: string }) {
         <div className="space-y-5">
           {/* control */}
           <Instrument
-            label="control remoto"
-            glow={eStop ? "bad" : undefined}
+            label="Control remoto"
             right={
               <ModeSwitch
                 mode={targetMode}
@@ -194,7 +179,7 @@ function Dashboard({ tankId }: { tankId: string }) {
           >
             {/* barra de seguridad */}
             {allowControl && (
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-base-700/70 bg-base-850/60 px-3 py-2.5">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-base-700 bg-base-850 px-3 py-2.5">
                 <span className="label">seguridad</span>
                 {!eStop ? (
                   <EmergencyStop
@@ -204,7 +189,7 @@ function Dashboard({ tankId }: { tankId: string }) {
                     onResume={() => data.setEmergencyStop(tankId, false)}
                   />
                 ) : (
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-bad">
+                  <span className="text-[12px] text-bad">
                     sistema en paro · usa el banner superior para reanudar
                   </span>
                 )}
@@ -212,13 +197,13 @@ function Dashboard({ tankId }: { tankId: string }) {
             )}
 
             {!allowControl && (
-              <div className="mb-3 rounded-md border border-dashed border-base-700 px-3 py-2 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
+              <div className="mb-3 rounded-md border border-dashed border-base-700 px-3 py-2 text-center text-[12px] text-ink-faint">
                 rol de solo lectura · sin control
               </div>
             )}
 
             {autoPaused && reported.mode === "auto" && !eStop && (
-              <div className="mb-3 rounded-md border border-amber/40 bg-amber/[0.07] px-3 py-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-amber">
+              <div className="mb-3 rounded-md border border-amber/40 bg-amber/[0.07] px-3 py-2 text-center text-[12px] text-amber">
                 llenado automático en pausa por mantenimiento
               </div>
             )}
@@ -247,7 +232,7 @@ function Dashboard({ tankId }: { tankId: string }) {
                 />
               )}
               {!config.actuators.pump.enabled && !config.actuators.valve.enabled && (
-                <div className="col-span-full rounded-md border border-dashed border-base-700 px-3 py-4 text-center font-mono text-[11px] text-ink-faint">
+                <div className="col-span-full rounded-md border border-dashed border-base-700 px-3 py-4 text-center text-[12px] text-ink-faint">
                   sin actuadores habilitados · configúralos en ajustes
                 </div>
               )}
@@ -255,34 +240,26 @@ function Dashboard({ tankId }: { tankId: string }) {
           </Instrument>
 
           {/* estado del sistema */}
-          <Instrument label="estado del sistema">
+          <Instrument label="Estado del sistema">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <StatusCell
-                label="conexión"
-                value={online ? "ONLINE" : "OFFLINE"}
-                tone={online ? "good" : "bad"}
-              />
+              <StatusCell label="conexión" value={online ? "en línea" : "sin conexión"} tone={online ? "good" : "bad"} />
               {config.actuators.pump.enabled && (
                 <StatusCell
                   label="cisterna"
-                  value={reported.cisternHasWater ? "CON AGUA" : "VACÍA"}
+                  value={reported.cisternHasWater ? "con agua" : "vacía"}
                   tone={reported.cisternHasWater ? "good" : "bad"}
                 />
               )}
               <StatusCell
                 label="sensor"
-                value={sensorDeg ? "DEGRADADO" : "OK"}
+                value={sensorDeg ? "degradado" : "correcto"}
                 tone={sensorDeg ? "warn" : "good"}
                 sub={`±${fmt(reported.sensorHealth?.noiseStd)} σ`}
               />
-              <StatusCell
-                label="estrategia"
-                value={config.actuationStrategy.toUpperCase()}
-                tone="info"
-              />
+              <StatusCell label="estrategia" value={config.actuationStrategy} tone="info" />
               <StatusCell
                 label="mantenimiento"
-                value={maint ? "EN CURSO" : maintNext ? "PROGRAMADO" : "SIN PLAN"}
+                value={maint ? "en curso" : maintNext ? "programado" : "sin plan"}
                 tone={maint ? "warn" : maintNext ? "info" : "good"}
                 sub={
                   maint
@@ -299,7 +276,7 @@ function Dashboard({ tankId }: { tankId: string }) {
           </Instrument>
 
           {/* alertas */}
-          <Instrument label="alertas activas">
+          <Instrument label="Alertas activas">
             <AlertPanel alerts={alerts} />
           </Instrument>
         </div>
@@ -307,12 +284,9 @@ function Dashboard({ tankId }: { tankId: string }) {
 
       {/* mini histórico */}
       <Instrument
-        label="tendencia de nivel · 30 min"
+        label="Tendencia de nivel · 30 min"
         right={
-          <Link
-            href={`/tank/${tankId}/history`}
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan transition hover:text-cyan-glow"
-          >
+          <Link href={`/tank/${tankId}/history`} className="text-[12px] text-cyan transition hover:text-cyan-glow">
             ver detalle →
           </Link>
         }
@@ -335,17 +309,17 @@ function StatusCell({
   sub?: string;
 }) {
   const c =
-    tone === "good" ? "#22c98a" : tone === "warn" ? "#ffb020" : tone === "bad" ? "#ff4d5e" : "#4aa3ff";
+    tone === "good" ? "#48b07f" : tone === "warn" ? "#d6a23e" : tone === "bad" ? "#dd5a68" : "#5b93d6";
   return (
-    <div className="rounded-lg border border-base-700/70 bg-base-850/60 px-3.5 py-3">
-      <div className="label mb-2 flex items-center gap-1.5">
-        <Led tone={tone} size={7} pulse={tone === "bad" || tone === "warn"} />
+    <div className="rounded-md border border-base-700 bg-base-850 px-3.5 py-3">
+      <div className="label mb-1.5 flex items-center gap-1.5">
+        <Led tone={tone} size={7} pulse={tone === "bad"} />
         {label}
       </div>
-      <div className="readout text-sm font-bold" style={{ color: c }}>
+      <div className="text-sm font-semibold capitalize" style={{ color: c }}>
         {value}
       </div>
-      {sub && <div className="mt-0.5 font-mono text-[10px] text-ink-faint">{sub}</div>}
+      {sub && <div className="mt-0.5 text-[11px] text-ink-faint">{sub}</div>}
     </div>
   );
 }
