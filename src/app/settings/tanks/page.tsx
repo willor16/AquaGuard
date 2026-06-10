@@ -337,7 +337,11 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
 export default function TanksSettingsPage() {
   return (
     <AuthGate>
-      <Shell back={{ href: "/", label: "flota" }} title="gestión de tanques">
+      <Shell>
+        <div className="mb-6">
+          <h1 className="text-lg font-semibold text-ink">Gestión de tanques</h1>
+          <p className="text-[13px] text-ink-dim">alta, edición y baja de equipos</p>
+        </div>
         <Manage />
       </Shell>
     </AuthGate>

@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { AuthGate } from "@/components/AuthGate";
-import { Shell } from "@/components/Shell";
 import { Instrument, Button, Led, Spinner } from "@/components/ui";
 import { Calendar } from "@/components/Calendar";
 import { useTank, useTicker } from "@/lib/hooks";
@@ -117,12 +115,9 @@ function Maintenance({ tankId }: { tankId: string }) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-ink">Mantenimiento · {tank?.meta.name}</h1>
-        <p className="text-[13px] text-ink-dim">
-          programa ventanas · el llenado automático se suspende mientras están activas
-        </p>
-      </div>
+      <p className="text-[13px] text-ink-dim">
+        programa ventanas · el llenado automático se suspende mientras están activas
+      </p>
 
       {/* estado */}
       {active ? (
@@ -322,11 +317,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export default function MaintenancePage() {
   const params = useParams<{ tankId: string }>();
-  return (
-    <AuthGate>
-      <Shell back={{ href: `/tank/${params.tankId}`, label: "tanque" }} title="mantenimiento">
-        <Maintenance tankId={params.tankId} />
-      </Shell>
-    </AuthGate>
-  );
+  return <Maintenance tankId={params.tankId} />;
 }

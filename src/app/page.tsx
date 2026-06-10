@@ -31,23 +31,13 @@ function Overview() {
   return (
     <Shell
       actions={
-        <>
-          <FleetEStop
-            stopped={stopped}
-            total={tanks.length}
-            canControl={allowControl}
-            onStopAll={stopAll}
-            onResumeAll={resumeAll}
-          />
-          {canManageTanks(user?.role) && (
-            <Link
-              href="/settings/tanks"
-              className="rounded-md border border-cyan/40 bg-cyan/10 px-3 py-1.5 text-[12px] font-medium text-cyan transition hover:bg-cyan/15"
-            >
-              gestionar tanques
-            </Link>
-          )}
-        </>
+        <FleetEStop
+          stopped={stopped}
+          total={tanks.length}
+          canControl={allowControl}
+          onStopAll={stopAll}
+          onResumeAll={resumeAll}
+        />
       }
     >
       <div className="mb-6">

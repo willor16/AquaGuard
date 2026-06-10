@@ -2,8 +2,6 @@
 
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
-import { AuthGate } from "@/components/AuthGate";
-import { Shell } from "@/components/Shell";
 import { Instrument, Metric, Spinner } from "@/components/ui";
 import { LevelChart } from "@/components/LevelChart";
 import { useTank, useHistory } from "@/lib/hooks";
@@ -56,10 +54,7 @@ function History({ tankId }: { tankId: string }) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-ink">Histórico · {tank?.meta.name}</h1>
-        <p className="text-[13px] text-ink-dim">tendencia de nivel y bitácora de eventos</p>
-      </div>
+      <p className="text-[13px] text-ink-dim">tendencia de nivel y bitácora de eventos</p>
 
       <div className="grid grid-cols-3 gap-3">
         <Metric label="mínimo" value={stats.min.toFixed(0)} unit="%" tone="warn" />
@@ -112,11 +107,5 @@ function History({ tankId }: { tankId: string }) {
 
 export default function HistoryPage() {
   const params = useParams<{ tankId: string }>();
-  return (
-    <AuthGate>
-      <Shell back={{ href: `/tank/${params.tankId}`, label: "tanque" }} title="histórico">
-        <History tankId={params.tankId} />
-      </Shell>
-    </AuthGate>
-  );
+  return <History tankId={params.tankId} />;
 }

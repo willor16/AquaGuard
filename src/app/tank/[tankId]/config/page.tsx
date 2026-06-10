@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AuthGate } from "@/components/AuthGate";
-import { Shell } from "@/components/Shell";
 import { Instrument, Button, Led, Spinner } from "@/components/ui";
 import { useTank } from "@/lib/hooks";
 import { getData } from "@/lib/data";
@@ -71,12 +69,9 @@ function ConfigForm({ tankId }: { tankId: string }) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-ink">Configuración · {tank?.meta.name}</h1>
-        <p className="text-[13px] text-ink-dim">
-          escribe en config/ · el dispositivo la lee como caja negra
-        </p>
-      </div>
+      <p className="text-[13px] text-ink-dim">
+        escribe en config/ · el dispositivo la lee como caja negra
+      </p>
 
       {/* umbrales */}
       <Instrument label="Umbrales de control automático">
@@ -303,11 +298,5 @@ function ActuatorEditor({
 
 export default function ConfigPage() {
   const params = useParams<{ tankId: string }>();
-  return (
-    <AuthGate>
-      <Shell back={{ href: `/tank/${params.tankId}`, label: "tanque" }} title="configuración">
-        <ConfigForm tankId={params.tankId} />
-      </Shell>
-    </AuthGate>
-  );
+  return <ConfigForm tankId={params.tankId} />;
 }
