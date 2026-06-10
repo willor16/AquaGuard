@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Instrument, Button, Led, Spinner } from "@/components/ui";
+import { Instrument, Button, Led, Spinner, Toggle } from "@/components/ui";
 import { useTank } from "@/lib/hooks";
 import { getData } from "@/lib/data";
 import { useAuth, canConfigure } from "@/lib/auth";
@@ -261,20 +261,7 @@ function ActuatorEditor({
     >
       <div className="flex items-center justify-between">
         <span className={`font-medium ${enabled ? "text-ink" : "text-ink-faint"}`}>{name}</span>
-        <button
-          role="switch"
-          aria-checked={enabled}
-          onClick={() => onToggle(!enabled)}
-          className={`relative h-6 w-11 rounded-full border transition ${
-            enabled ? "border-cyan/60 bg-cyan/25" : "border-base-600 bg-base-800"
-          }`}
-        >
-          <span
-            className={`absolute top-0.5 h-4 w-4 rounded-full transition-transform ${
-              enabled ? "translate-x-[22px] bg-cyan" : "translate-x-0.5 bg-ink-faint"
-            }`}
-          />
-        </button>
+        <Toggle checked={enabled} onChange={onToggle} label={name} />
       </div>
       <div className={`mt-3 flex items-center justify-between ${enabled ? "" : "opacity-40"}`}>
         <span className="label">canal de relé</span>

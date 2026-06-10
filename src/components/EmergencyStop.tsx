@@ -26,7 +26,7 @@ export function EmergencyStop({
                 onResume();
                 setConfirm(false);
               }}
-              className="rounded-md border border-good/60 bg-good/15 px-3.5 py-2 text-[13px] font-semibold text-good transition hover:bg-good/20"
+              className="animate-scale-in rounded-md border border-good/60 bg-good/15 px-3.5 py-2 text-[13px] font-semibold text-good transition-all duration-150 ease-smooth hover:bg-good/20 active:scale-[0.97]"
             >
               confirmar reanudación
             </button>
@@ -41,7 +41,7 @@ export function EmergencyStop({
           <button
             disabled={!canControl}
             onClick={() => setConfirm(true)}
-            className="rounded-md border border-good/50 bg-good/10 px-3.5 py-2 text-[13px] font-medium text-good transition hover:bg-good/15 disabled:opacity-40"
+            className="rounded-md border border-good/50 bg-good/10 px-3.5 py-2 text-[13px] font-medium text-good transition-all duration-150 ease-smooth hover:bg-good/15 active:scale-[0.97] disabled:opacity-40"
           >
             reanudar operación
           </button>

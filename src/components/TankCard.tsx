@@ -18,7 +18,7 @@ export function TankCard({ t }: { t: TankSummary }) {
   return (
     <Link
       href={`/tank/${t.tankId}`}
-      className="panel block p-4 transition hover:border-base-600 hover:bg-base-750"
+      className="panel panel-interactive animate-fade-up block p-4 hover:border-cyan/30"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -38,7 +38,7 @@ export function TankCard({ t }: { t: TankSummary }) {
               online ? "text-good" : "text-ink-faint"
             }`}
           >
-            <Led tone={online ? "good" : "idle"} pulse={online} />
+            <Led tone={online ? "good" : "idle"} ping={online} />
             {online ? "en línea" : "fuera"}
           </span>
         </div>

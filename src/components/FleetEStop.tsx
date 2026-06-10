@@ -55,7 +55,7 @@ export function FleetEStop({
       {stopped > 0 && (
         <button
           onClick={() => setConfirm("resume")}
-          className="rounded-md border border-good/50 bg-good/10 px-3 py-1.5 text-[12px] font-medium text-good transition hover:bg-good/15"
+          className="rounded-md border border-good/50 bg-good/10 px-3 py-1.5 text-[12px] font-medium text-good transition-all duration-150 ease-smooth hover:bg-good/15 active:scale-[0.97]"
         >
           reanudar flota
         </button>
@@ -63,7 +63,7 @@ export function FleetEStop({
       {!allStopped && (
         <button
           onClick={() => setConfirm("stop")}
-          className="inline-flex items-center gap-2 rounded-md border border-bad/50 bg-bad/10 px-3 py-1.5 text-[12px] font-semibold text-bad transition hover:bg-bad/15"
+          className="inline-flex items-center gap-2 rounded-md border border-bad/50 bg-bad/10 px-3 py-1.5 text-[12px] font-semibold text-bad transition-all duration-150 ease-smooth hover:bg-bad/15 active:scale-[0.97]"
         >
           <span className="grid h-4 w-4 place-items-center rounded-full border border-bad text-[9px]">
             ✕
@@ -95,7 +95,7 @@ function Confirm({
     <div className="flex items-center gap-2">
       <button
         onClick={onConfirm}
-        className={`rounded-md border px-3 py-1.5 text-[12px] font-semibold transition ${cls}`}
+        className={`animate-scale-in rounded-md border px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 ease-smooth active:scale-[0.97] ${cls}`}
       >
         confirmar · {label}
       </button>

@@ -120,24 +120,24 @@ export function ActuatorControl({
           <button
             onClick={() => send(true)}
             disabled={!canControl || !online || (reportedOn && !sending)}
-            className={`rounded-md border px-3 py-2 text-[13px] font-medium transition disabled:opacity-40 ${
+            className={`inline-flex min-h-[42px] items-center justify-center rounded-md border text-[13px] font-medium transition-all duration-150 ease-smooth active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 ${
               reportedOn
-                ? "border-good/60 bg-good/15 text-good"
-                : "border-base-600 text-ink-dim hover:border-good/50 hover:text-good"
+                ? "border-good/60 bg-good/15 text-good shadow-glow"
+                : "border-base-600 text-ink-dim hover:border-good/50 hover:bg-good/[0.06] hover:text-good"
             }`}
           >
-            Encender
+            encender
           </button>
           <button
             onClick={() => send(false)}
             disabled={!canControl || !online || (!reportedOn && !sending)}
-            className={`rounded-md border px-3 py-2 text-[13px] font-medium transition disabled:opacity-40 ${
+            className={`inline-flex min-h-[42px] items-center justify-center rounded-md border text-[13px] font-medium transition-all duration-150 ease-smooth active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 ${
               !reportedOn
                 ? "border-base-600 bg-base-700 text-ink"
-                : "border-base-600 text-ink-dim hover:border-bad/50 hover:text-bad"
+                : "border-base-600 text-ink-dim hover:border-bad/50 hover:bg-bad/[0.06] hover:text-bad"
             }`}
           >
-            Apagar
+            apagar
           </button>
         </div>
       ) : (
@@ -173,23 +173,27 @@ export function ModeSwitch({
     <div className="flex items-center gap-2.5">
       <div className="relative grid grid-cols-2 rounded-md border border-base-600 bg-base-850 p-0.5">
         <span
-          className="absolute inset-y-0.5 w-[calc(50%-2px)] rounded bg-cyan/15 ring-1 ring-cyan/40 transition-transform duration-300"
-          style={{ transform: reportedMode === "manual" ? "translateX(100%)" : "translateX(0)" }}
+          className="absolute inset-y-0.5 w-[calc(50%-2px)] rounded bg-cyan/15 ring-1 ring-cyan/40 transition-transform duration-300 ease-spring"
+          style={{ transform: mode === "manual" ? "translateX(100%)" : "translateX(0)" }}
         />
         {(["auto", "manual"] as Mode[]).map((m) => (
           <button
             key={m}
             disabled={!canControl || !online}
             onClick={() => onChange(m)}
-            className={`relative z-10 rounded px-4 py-1.5 text-[13px] font-medium transition disabled:opacity-40 ${
-              reportedMode === m ? "text-cyan" : "text-ink-dim hover:text-ink"
+            className={`relative z-10 rounded px-4 py-1.5 text-[13px] font-medium transition-colors duration-200 disabled:opacity-40 ${
+              mode === m ? "text-cyan" : "text-ink-dim hover:text-ink"
             }`}
           >
             {m}
           </button>
         ))}
       </div>
-      {pending && <span className="text-[11px] text-warn">aplicando…</span>}
+      {pending && (
+        <span className="flex items-center gap-1.5 text-[11px] text-warn">
+          <Led tone="warn" size={6} pulse /> aplicando…
+        </span>
+      )}
     </div>
   );
 }

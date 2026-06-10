@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { AuthGate } from "@/components/AuthGate";
 import { Shell } from "@/components/Shell";
-import { Instrument, Button, Led, Spinner } from "@/components/ui";
+import { Instrument, Button, Led, Spinner, Toggle } from "@/components/ui";
 import { useTanksList } from "@/lib/hooks";
 import { getData } from "@/lib/data";
 import { useAuth, canManageTanks } from "@/lib/auth";
@@ -296,7 +296,7 @@ function ChannelRow({
       }`}
     >
       <div className="flex items-center gap-2.5">
-        <Toggle checked={enabled} onChange={() => onToggle(!enabled)} />
+        <Toggle checked={enabled} onChange={onToggle} label={name} />
         <span className={enabled ? "text-ink" : "text-ink-faint"}>{name}</span>
       </div>
       <div className={`flex items-center gap-1.5 ${enabled ? "" : "opacity-40"}`}>
@@ -312,25 +312,6 @@ function ChannelRow({
         />
       </div>
     </div>
-  );
-}
-
-function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
-  return (
-    <button
-      role="switch"
-      aria-checked={checked}
-      onClick={onChange}
-      className={`relative h-5 w-9 rounded-full border transition ${
-        checked ? "border-cyan/60 bg-cyan/25" : "border-base-600 bg-base-800"
-      }`}
-    >
-      <span
-        className={`absolute top-0.5 h-3.5 w-3.5 rounded-full transition-transform ${
-          checked ? "translate-x-[18px] bg-cyan" : "translate-x-0.5 bg-ink-faint"
-        }`}
-      />
-    </button>
   );
 }
 

@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-screen place-items-center px-4">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm animate-fade-up">
         {/* marca */}
         <div className="mb-6 flex items-center gap-3">
           <span className="grid h-11 w-11 place-items-center rounded-lg bg-cyan/15 text-cyan">
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 setEmail("operador@demo.local");
                 setTimeout(submit, 0);
               }}
-              className="mt-3 w-full rounded-md border border-dashed border-base-600 px-4 py-2.5 text-[13px] text-ink-dim transition hover:border-cyan/50 hover:text-cyan"
+              className="mt-3 w-full rounded-md border border-dashed border-base-600 px-4 py-2.5 text-[13px] text-ink-dim transition-all duration-150 ease-smooth hover:border-cyan/50 hover:bg-cyan/[0.04] hover:text-cyan active:scale-[0.98]"
             >
               entrar como operador demo
             </button>

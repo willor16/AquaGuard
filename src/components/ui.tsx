@@ -11,29 +11,37 @@ const toneColor: Record<Tone, string> = {
   idle: "#69737f",
 };
 
-/** Indicador de estado discreto. `pulse` solo para estados vivos/alerta. */
+/** Indicador de estado discreto. `pulse` parpadea; `ping` añade un halo expansivo para estados vivos. */
 export function Led({
   tone = "idle",
   pulse = false,
+  ping = false,
   size = 8,
 }: {
   tone?: Tone;
   pulse?: boolean;
+  ping?: boolean;
   size?: number;
 }) {
   const c = toneColor[tone];
   return (
-    <span
-      className={pulse ? "animate-pulse-led" : ""}
-      style={{
-        display: "inline-block",
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: c,
-        boxShadow: `0 0 0 3px ${c}22`,
-      }}
-    />
+    <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
+      {ping && (
+        <span
+          className="animate-ping-ring absolute inset-0 rounded-full"
+          style={{ background: c }}
+        />
+      )}
+      <span
+        className={`relative inline-block rounded-full ${pulse ? "animate-pulse-led" : ""}`}
+        style={{
+          width: size,
+          height: size,
+          background: c,
+          boxShadow: `0 0 0 3px ${c}22`,
+        }}
+      />
+    </span>
   );
 }
 
@@ -61,6 +69,39 @@ export function Pill({
   );
 }
 
+/** Interruptor accesible y compacto, con realimentación animada. */
+export function Toggle({
+  checked,
+  onChange,
+  disabled = false,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  disabled?: boolean;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 ease-smooth disabled:opacity-40 ${
+        checked ? "border-cyan/60 bg-cyan/30" : "border-base-600 bg-base-750"
+      }`}
+    >
+      <span
+        className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full shadow-sm transition-all duration-200 ease-spring ${
+          checked ? "left-[calc(100%-1.25rem)] bg-cyan" : "left-1 bg-ink-faint"
+        }`}
+      />
+    </button>
+  );
+}
+
 /** Tarjeta de sección con encabezado simple. */
 export function Instrument({
   label,
@@ -74,7 +115,7 @@ export function Instrument({
   className?: string;
 }) {
   return (
-    <section className={`panel ${className}`}>
+    <section className={`panel animate-fade-up ${className}`}>
       {(label || right) && (
         <header className="flex flex-wrap items-center justify-between gap-2 border-b border-base-700 px-4 py-3">
           {label ? (
@@ -105,7 +146,7 @@ export function Metric({
   sub?: ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-base-700 bg-base-850 px-3.5 py-3">
+    <div className="rounded-md border border-base-700 bg-base-850 px-3.5 py-3 transition-colors duration-200 hover:border-base-600">
       <div className="label mb-1.5">{label}</div>
       <div className="flex items-baseline gap-1">
         <span
@@ -137,12 +178,11 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan/50";
+    "inline-flex min-h-[40px] items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-150 ease-smooth active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40";
   const variants: Record<string, string> = {
-    primary: "bg-cyan text-white font-semibold hover:bg-cyan-deep",
+    primary: "bg-cyan font-semibold text-white shadow-sm hover:bg-cyan-deep",
     active: "border border-cyan/60 bg-cyan/10 text-cyan hover:bg-cyan/15",
-    ghost:
-      "border border-base-600 bg-base-750 text-ink-dim hover:text-ink hover:border-base-600 hover:bg-base-700",
+    ghost: "border border-base-600 bg-base-750 text-ink-dim hover:border-base-600 hover:bg-base-700 hover:text-ink",
     danger: "border border-bad/50 bg-bad/10 text-bad hover:bg-bad/15",
   };
   return (
@@ -159,9 +199,12 @@ export function Button({
 
 export function Spinner({ label }: { label?: string }) {
   return (
-    <div className="flex items-center gap-3 text-sm text-ink-dim">
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-base-600 border-t-cyan" />
-      {label ?? "Cargando…"}
+    <div className="flex flex-col items-center gap-3 text-sm text-ink-dim">
+      <span className="relative h-7 w-7">
+        <span className="absolute inset-0 rounded-full border-2 border-base-700" />
+        <span className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-cyan" />
+      </span>
+      {label && <span className="animate-pulse">{label}</span>}
     </div>
   );
 }

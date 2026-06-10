@@ -114,13 +114,25 @@ export function Shell({
             <Link
               key={it.href}
               href={it.href}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-[13px] transition ${
+              className={`group relative flex items-center gap-3 rounded-md px-3 py-2 text-[13px] transition-all duration-200 ease-smooth ${
                 it.active
                   ? "bg-cyan/12 font-medium text-cyan"
-                  : "text-ink-dim hover:bg-base-800 hover:text-ink"
+                  : "text-ink-dim hover:translate-x-0.5 hover:bg-base-800 hover:text-ink"
               }`}
             >
-              <span className={it.active ? "text-cyan" : "text-ink-faint"}>{it.icon}</span>
+              {/* barra de acento de la sección activa */}
+              <span
+                className={`absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-cyan transition-all duration-200 ${
+                  it.active ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              <span
+                className={`transition-colors ${
+                  it.active ? "text-cyan" : "text-ink-faint group-hover:text-ink-dim"
+                }`}
+              >
+                {it.icon}
+              </span>
               {it.label}
             </Link>
           ))}
@@ -176,16 +188,28 @@ export function Shell({
       </main>
 
       {/* ── navegación inferior (móvil) ── */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-base-700 bg-base-900/95 backdrop-blur lg:hidden">
+      <nav className="pb-safe fixed inset-x-0 bottom-0 z-40 flex border-t border-base-700 bg-base-900/95 backdrop-blur lg:hidden">
         {nav.map((it) => (
           <Link
             key={it.href}
             href={it.href}
-            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition ${
+            className={`relative flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition-colors duration-200 active:bg-base-800 ${
               it.active ? "text-cyan" : "text-ink-dim"
             }`}
           >
-            {it.icon}
+            {/* indicador superior de la sección activa */}
+            <span
+              className={`absolute inset-x-[30%] top-0 h-0.5 rounded-full bg-cyan transition-opacity duration-200 ${
+                it.active ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <span
+              className={`transition-transform duration-200 ease-spring ${
+                it.active ? "scale-110" : "scale-100"
+              }`}
+            >
+              {it.icon}
+            </span>
             {it.label}
           </Link>
         ))}

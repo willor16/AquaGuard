@@ -11,13 +11,40 @@
 @layer base {
   html {
     color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
   }
   body {
     @apply bg-base-850 text-ink font-sans antialiased;
+    /* sin destello azul al tocar en móvil */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* foco accesible y discreto sólo con teclado */
+  :focus-visible {
+    @apply outline-none ring-2 ring-cyan/60 ring-offset-2 ring-offset-base-850;
+  }
+  /* objetivos táctiles cómodos en móvil */
+  button,
+  a,
+  [role="button"],
+  [role="switch"] {
+    touch-action: manipulation;
   }
 
   ::selection {
     background: rgba(75, 142, 240, 0.25);
+  }
+
+  /* respeta a quien prefiere menos movimiento */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* scrollbar discreta */
@@ -45,6 +72,14 @@
   /* panel base: tarjeta sobria con borde fino */
   .panel {
     @apply relative rounded-lg border border-base-700 bg-base-800 shadow-card;
+  }
+  /* tarjeta interactiva: leve elevación al pasar / presionar */
+  .panel-interactive {
+    @apply transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-base-600 hover:shadow-card-lift active:translate-y-0 active:scale-[0.995];
+  }
+  /* realimentación de presión para controles */
+  .tap {
+    @apply transition-transform duration-150 ease-smooth active:scale-[0.97];
   }
 
   /* etiqueta de sección, minúscula y legible */
@@ -75,5 +110,20 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  /* respeta el notch / barra inferior en móvil */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .h-safe-bottom {
+    height: env(safe-area-inset-bottom, 0px);
+  }
+  /* desplazamiento horizontal suave (pestañas en móvil) */
+  .scroll-x {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroll-x::-webkit-scrollbar {
+    display: none;
   }
 }
