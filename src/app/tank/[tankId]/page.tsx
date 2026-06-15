@@ -58,7 +58,7 @@ function Resumen({ tankId }: { tankId: string }) {
       <div className="space-y-5">
         {/* estado del sistema */}
         <Instrument label="Estado del sistema">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             <StatusCell
               label="conexión"
               value={online ? "en línea" : "sin conexión"}
@@ -78,6 +78,43 @@ function Resumen({ tankId }: { tankId: string }) {
               sub={`±${fmt(reported.sensorHealth?.noiseStd)} σ`}
             />
             <StatusCell label="estrategia" value={config.actuationStrategy} tone="info" />
+            <StatusCell
+              label="humedad"
+              value={
+                reported.moistureWet === true
+                  ? "húmedo"
+                  : reported.moistureWet === false
+                  ? "seco"
+                  : "sin dato"
+              }
+              tone={
+                reported.moistureWet === true
+                  ? "bad"
+                  : reported.moistureWet === false
+                  ? "good"
+                  : "info"
+              }
+              sub={
+                reported.moistureRaw !== undefined
+                  ? `ADC: ${reported.moistureRaw}`
+                  : undefined
+              }
+            />
+            <StatusCell
+              label="calibración"
+              value={
+                config.calibration?.ultrasonic?.isCalibrated &&
+                config.calibration?.moisture?.isCalibrated
+                  ? "completa"
+                  : "pendiente"
+              }
+              tone={
+                config.calibration?.ultrasonic?.isCalibrated &&
+                config.calibration?.moisture?.isCalibrated
+                  ? "good"
+                  : "warn"
+              }
+            />
             <StatusCell
               label="mantenimiento"
               value={maint ? "en curso" : maintNext ? "programado" : "sin plan"}

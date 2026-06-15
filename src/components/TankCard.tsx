@@ -14,6 +14,9 @@ export function TankCard({ t }: { t: TankSummary }) {
     lvl >= 98 ? "#dd5a68" : lvl <= (t.config?.startPct ?? 0) ? "#d6a23e" : "#4b8ef0";
   const eStop = t.config?.emergencyStop === true;
   const maint = activeMaintenance(t.config);
+  const uncalibrated =
+    !t.config?.calibration?.ultrasonic?.isCalibrated ||
+    !t.config?.calibration?.moisture?.isCalibrated;
 
   return (
     <Link
@@ -32,6 +35,8 @@ export function TankCard({ t }: { t: TankSummary }) {
             <Pill tone="bad">paro</Pill>
           ) : maint ? (
             <Pill tone="warn">mant.</Pill>
+          ) : uncalibrated ? (
+            <Pill tone="warn">sin calibrar</Pill>
           ) : null}
           <span
             className={`inline-flex items-center gap-1.5 text-[12px] ${

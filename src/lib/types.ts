@@ -48,6 +48,31 @@ export interface TankMeta {
   location?: string;
 }
 
+/* ── Calibración de sensores ─────────────────────────────── */
+
+/** Calibración del sensor ultrasónico (distancia → nivel %). */
+export interface UltrasonicCalibration {
+  emptyDistanceCm: number;   // distancia medida con tanque vacío (= altura útil)
+  fullDistanceCm: number;    // distancia mínima (tanque lleno, ~2-5 cm del sensor)
+  calibratedAt: number;      // epoch (s)
+  isCalibrated: boolean;
+}
+
+/** Calibración del sensor de humedad (medida de emergencia para la bomba). */
+export interface MoistureCalibration {
+  dryValue: number;          // lectura ADC cuando el sensor está seco
+  wetValue: number;          // lectura ADC cuando está sumergido en agua
+  threshold: number;         // umbral calculado (punto medio, o ajustado manualmente)
+  calibratedAt: number;      // epoch (s)
+  isCalibrated: boolean;
+}
+
+/** Configuración de calibración completa por tanque. */
+export interface CalibrationConfig {
+  ultrasonic: UltrasonicCalibration;
+  moisture: MoistureCalibration;
+}
+
 export interface TankConfig {
   mode: Mode;
   startPct: number; // umbral de encendido
@@ -61,6 +86,8 @@ export interface TankConfig {
   emergencyStop?: boolean;
   /** Mantenimientos programados (id → ventana). */
   maintenance?: Record<string, MaintenanceWindow>;
+  /** Calibración de sensores (ultrasónico + humedad). */
+  calibration?: CalibrationConfig;
 }
 
 export interface TankDesired {
@@ -85,6 +112,10 @@ export interface TankReported {
   lastSeen: number; // epoch en segundos
   sensorHealth: SensorHealth;
   mode: Mode;
+  /** Lectura cruda del sensor de humedad (ADC 0-4095). */
+  moistureRaw?: number;
+  /** true = húmedo → bomba bloqueada como medida de emergencia. */
+  moistureWet?: boolean;
 }
 
 export interface Alert {

@@ -112,6 +112,22 @@ export function TankChrome({ tankId, children }: { tankId: string; children: Rea
         </div>
       )}
 
+      {/* banner calibración pendiente */}
+      {!config.calibration?.ultrasonic?.isCalibrated || !config.calibration?.moisture?.isCalibrated ? (
+        <Link
+          href={`/tank/${tankId}/calibration`}
+          className="flex items-center gap-3 rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-[13px] transition-colors hover:border-amber/60"
+        >
+          <Led tone="warn" />
+          <span className="text-amber">
+            <span className="font-semibold">Sensores sin calibrar</span>{" "}
+            <span className="text-ink-dim">
+              — las lecturas podrían no ser precisas. Toca aquí para calibrar.
+            </span>
+          </span>
+        </Link>
+      ) : null}
+
       {children}
     </div>
   );

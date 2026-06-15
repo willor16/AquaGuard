@@ -1,5 +1,6 @@
 import type {
   Alert,
+  CalibrationConfig,
   HistoryPoint,
   MaintenanceWindow,
   Tank,
@@ -60,6 +61,8 @@ function seedTank(
   level: number
 ): DemoTank {
   const t = now();
+  // Simular lectura de humedad: valor ADC donde mayor = más húmedo
+  const moistureRaw = 800 + Math.floor(Math.random() * 200);
   return {
     tankId,
     history: [],
@@ -78,11 +81,32 @@ function seedTank(
         lastSeen: t,
         sensorHealth: { invalidRatePct: 0.8, noiseStd: 0.3, status: "ok" },
         mode: config.mode,
+        moistureRaw,
+        moistureWet: false,
       },
       alerts: {},
       events: {
         [uid("ev")]: { ts: t, type: "MODE_CHANGE", detail: "Arranque del sistema" },
       },
+    },
+  };
+}
+
+/** Calibración por defecto para tanques demo ya calibrados. */
+function defaultCalibration(heightCm: number): CalibrationConfig {
+  return {
+    ultrasonic: {
+      emptyDistanceCm: heightCm,
+      fullDistanceCm: 3,
+      calibratedAt: now() - 86400 * 7, // hace 7 días
+      isCalibrated: true,
+    },
+    moisture: {
+      dryValue: 850,
+      wetValue: 2800,
+      threshold: 1825,
+      calibratedAt: now() - 86400 * 7,
+      isCalibrated: true,
     },
   };
 }
@@ -102,6 +126,7 @@ function defaultSeed(): Record<string, DemoTank> {
           valve: { enabled: true, relayChannel: 2 },
         },
         actuationStrategy: "priority",
+        calibration: defaultCalibration(130),
       },
       58
     ),
@@ -118,6 +143,7 @@ function defaultSeed(): Record<string, DemoTank> {
           valve: { enabled: false, relayChannel: null },
         },
         actuationStrategy: "single",
+        calibration: defaultCalibration(150),
       },
       41
     ),
@@ -134,6 +160,7 @@ function defaultSeed(): Record<string, DemoTank> {
           valve: { enabled: true, relayChannel: 4 },
         },
         actuationStrategy: "single",
+        // SIN calibración — para demostrar el estado "sin calibrar"
       },
       72
     ),
@@ -379,7 +406,26 @@ class DemoStore {
     delta -= 0.32; // consumo / demanda
     delta += (Math.random() - 0.5) * 0.08; // ruido
     reported.levelPct = clamp(Math.round((reported.levelPct + delta) * 10) / 10, 0, 100);
-    reported.distanceCm = levelToDistance(reported.levelPct);
+
+    // usar la calibración del tanque para calcular distancia, o TANK_HEIGHT_CM por defecto
+    const tankH = config.calibration?.ultrasonic?.emptyDistanceCm ?? TANK_HEIGHT_CM;
+    reported.distanceCm = Math.round(((100 - reported.levelPct) / 100) * tankH * 10) / 10;
+
+    // ---- simulación del sensor de humedad ----
+    // Simula un valor ADC (0-4095) con ruido y variación lenta
+    const cal = config.calibration?.moisture;
+    const baseMoisture = cal?.isCalibrated ? (cal.dryValue + 100) : 900;
+    reported.moistureRaw = clamp(
+      Math.round(baseMoisture + (Math.random() - 0.5) * 80),
+      0,
+      4095
+    );
+    // Determinar si está húmedo según el umbral calibrado
+    if (cal?.isCalibrated) {
+      reported.moistureWet = reported.moistureRaw >= cal.threshold;
+    } else {
+      reported.moistureWet = false;
+    }
 
     // ---- sobrenivel ----
     this.setAlert(dt, "OVERFLOW", "Nivel por encima del 98 %", reported.levelPct >= 98);
@@ -495,6 +541,19 @@ class DemoStore {
     this.notifyAll();
   }
 
+  writeCalibration(tankId: string, calibration: CalibrationConfig) {
+    const dt = this.tanks[tankId];
+    if (!dt) return;
+    dt.tank.config.calibration = calibration;
+    this.logEvent(dt, {
+      ts: now(),
+      type: "CONFIG_CHANGE",
+      detail: "Calibración de sensores actualizada",
+    });
+    this.persist();
+    this.notifyAll();
+  }
+
   createTank(input: NewTankInput) {
     if (this.tanks[input.tankId]) throw new Error("Ya existe un tanque con ese ID");
     const dt = seedTank(
@@ -533,6 +592,7 @@ export const demoProvider: DataProvider = {
   setEmergencyStop: async (id, v) => getStore().setEmergencyStop(id, v),
   upsertMaintenance: async (id, w) => getStore().upsertMaintenance(id, w),
   deleteMaintenance: async (id, wid) => getStore().deleteMaintenance(id, wid),
+  writeCalibration: async (id, cal) => getStore().writeCalibration(id, cal),
   createTank: async (input) => getStore().createTank(input),
   deleteTank: async (id) => getStore().deleteTank(id),
 };

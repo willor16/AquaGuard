@@ -11,6 +11,7 @@ import {
 import { getFirebaseApp } from "@/lib/firebase";
 import type {
   AppUser,
+  CalibrationConfig,
   HistoryPoint,
   MaintenanceWindow,
   Tank,
@@ -103,6 +104,10 @@ export const firebaseProvider: DataProvider = {
 
   async deleteMaintenance(tankId: string, windowId: string) {
     await remove(ref(db(), `tanks/${tankId}/config/maintenance/${windowId}`));
+  },
+
+  async writeCalibration(tankId: string, calibration: CalibrationConfig) {
+    await set(ref(db(), `tanks/${tankId}/config/calibration`), calibration);
   },
 
   async createTank(input: NewTankInput) {

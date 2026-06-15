@@ -1,5 +1,6 @@
 import type {
   AppUser,
+  CalibrationConfig,
   HistoryPoint,
   MaintenanceWindow,
   Tank,
@@ -49,6 +50,9 @@ export interface DataProvider {
   // Mantenimiento programado (se persiste en config/maintenance/).
   upsertMaintenance(tankId: string, window: MaintenanceWindow): Promise<void>;
   deleteMaintenance(tankId: string, windowId: string): Promise<void>;
+
+  // Calibración de sensores (se persiste en config/calibration/).
+  writeCalibration(tankId: string, calibration: CalibrationConfig): Promise<void>;
 
   // Gestión de tanques (alta/baja). En Firebase real lo haría un admin/Cloud Function;
   // aquí la app escribe meta/ y config/ iniciales.

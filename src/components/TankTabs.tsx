@@ -19,6 +19,7 @@ export function TankTabs({
     { label: "control", href: `${base}/control` },
     { label: "histórico", href: `${base}/history` },
     { label: "mantenimiento", href: `${base}/maintenance` },
+    ...(canConfigure ? [{ label: "calibración", href: `${base}/calibration` }] : []),
     ...(canConfigure ? [{ label: "configuración", href: `${base}/config` }] : []),
   ];
 
