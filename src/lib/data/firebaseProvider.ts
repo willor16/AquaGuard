@@ -35,6 +35,24 @@ function withOnline(r: TankReported): TankReported {
   return { ...r, online };
 }
 
+// Un tanque creado por el dispositivo (que solo escribe reported/) puede no tener
+// config/. Rellenamos con valores por defecto para que la UI no se rompa.
+function withConfig(c?: Partial<TankConfig>): TankConfig {
+  return {
+    mode: c?.mode ?? "auto",
+    startPct: c?.startPct ?? 30,
+    stopPct: c?.stopPct ?? 90,
+    actuators: {
+      pump: c?.actuators?.pump ?? { enabled: true, relayChannel: 1 },
+      valve: c?.actuators?.valve ?? { enabled: false, relayChannel: null },
+    },
+    actuationStrategy: c?.actuationStrategy ?? "single",
+    emergencyStop: c?.emergencyStop,
+    maintenance: c?.maintenance,
+    calibration: c?.calibration,
+  };
+}
+
 export const firebaseProvider: DataProvider = {
   mode: "firebase",
 
@@ -49,7 +67,7 @@ export const firebaseProvider: DataProvider = {
         .map(([tankId, t]) => ({
           tankId,
           meta: t.meta || { name: tankId },
-          config: t.config,
+          config: withConfig(t.config),
           reported: withOnline(t.reported || ({} as TankReported)),
           activeAlerts: t.alerts
             ? Object.values<any>(t.alerts).filter((a) => a.active).length
@@ -66,7 +84,7 @@ export const firebaseProvider: DataProvider = {
       if (!t) return cb(null);
       cb({
         meta: t.meta || { name: tankId },
-        config: t.config,
+        config: withConfig(t.config),
         desired: t.desired || { pumpManual: null, valveManual: null, requestedMode: null },
         reported: withOnline(t.reported || ({} as TankReported)),
         alerts: t.alerts || {},
