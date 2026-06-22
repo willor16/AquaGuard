@@ -32,3 +32,12 @@ next-env.d.ts
 
 # notas locales (no se publican)
 pasos firebase.txt
+
+# secretos del firmware ESP32 (WiFi + Firebase) — usa config.example.h como plantilla
+esp32-aquaguard/include/config.h
+
+# UIDs sembrados en Firebase (datos del proyecto, no subir)
+firebase-seed-users.json
+
+# artefactos de compilación de PlatformIO
+esp32-aquaguard/.pio/

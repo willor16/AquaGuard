@@ -71,23 +71,23 @@
 @layer components {
   /* panel base: tarjeta sobria con borde fino */
   .panel {
-    @apply relative rounded-lg border border-base-700 bg-base-800 shadow-card;
+    @apply relative rounded-lg border border-base-700 bg-base-800 shadow-card transition-all duration-300;
   }
   /* tarjeta interactiva: leve elevación al pasar / presionar */
   .panel-interactive {
-    @apply transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-base-600 hover:shadow-card-lift active:translate-y-0 active:scale-[0.995];
+    @apply transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-base-600 hover:shadow-card-lift active:translate-y-0 active:scale-[0.99];
   }
   /* realimentación de presión para controles */
   .tap {
-    @apply transition-transform duration-150 ease-smooth active:scale-[0.97];
+    @apply transition-transform duration-150 ease-smooth active:scale-[0.96];
   }
 
   /* etiqueta de sección, minúscula y legible */
   .label {
-    @apply text-[11px] font-medium text-ink-dim;
+    @apply text-[11px] font-semibold text-ink-dim tracking-wide;
   }
   .label-cyan {
-    @apply text-[11px] font-medium text-cyan;
+    @apply text-[11px] font-semibold text-cyan tracking-wide;
   }
 
   /* lectura numérica: tipografía normal, cifras tabulares */
@@ -99,8 +99,8 @@
   /* campo de formulario unificado */
   .input,
   .inp {
-    @apply w-full rounded-md border border-base-600 bg-base-900/70 px-3 py-2 text-sm text-ink outline-none transition;
-    @apply placeholder:text-ink-faint focus:border-cyan/70 focus:ring-2 focus:ring-cyan/20;
+    @apply w-full rounded-lg border border-base-600 bg-base-900/50 px-3 py-2.5 text-sm text-ink outline-none transition-all duration-200;
+    @apply placeholder:text-ink-faint focus:border-cyan/50 focus:ring-2 focus:ring-cyan/20 focus:bg-base-900/80;
   }
   .inp[type="datetime-local"] {
     color-scheme: dark;

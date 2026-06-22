@@ -184,15 +184,15 @@ function StatusCell({
       ? "#dd5a68"
       : "#5b93d6";
   return (
-    <div className="rounded-md border border-base-700 bg-base-850 px-3.5 py-3">
-      <div className="label mb-1.5 flex items-center gap-1.5">
-        <Led tone={tone} size={7} pulse={tone === "bad"} />
+    <div className="rounded-lg border border-base-700 bg-base-850 px-4 py-3.5 transition-all duration-300 hover:border-base-600 hover:shadow-panel">
+      <div className="label mb-2 flex items-center gap-1.5">
+        <Led tone={tone} size={8} pulse={tone === "bad"} />
         {label}
       </div>
-      <div className="text-sm font-semibold capitalize" style={{ color: c }}>
+      <div className="text-sm font-bold capitalize tracking-tight" style={{ color: c }}>
         {value}
       </div>
-      {sub && <div className="mt-0.5 text-[11px] text-ink-faint">{sub}</div>}
+      {sub && <div className="mt-1 text-[11px] font-medium text-ink-faint">{sub}</div>}
     </div>
   );
 }

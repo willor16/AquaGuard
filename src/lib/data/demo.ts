@@ -114,8 +114,8 @@ function defaultCalibration(heightCm: number): CalibrationConfig {
 function defaultSeed(): Record<string, DemoTank> {
   const tanks: DemoTank[] = [
     seedTank(
-      "canton-norte",
-      "Tanque Cantón Norte",
+      "tanque-uno",
+      "Tanque Uno",
       "Sector Norte · Bomba + Válvula",
       {
         mode: "auto",
@@ -173,13 +173,13 @@ function defaultSeed(): Record<string, DemoTank> {
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(9, 0, 0, 0);
   const startTs = Math.floor(tomorrow.getTime() / 1000);
-  map["canton-norte"].tank.config.maintenance = {
+  map["tanque-uno"].tank.config.maintenance = {
     m_seed1: {
       id: "m_seed1",
       title: "Limpieza programada del tanque",
       startTs,
       endTs: startTs + 2 * 3600,
-      note: "Cuadrilla de mantenimiento · cantón norte",
+      note: "Cuadrilla de mantenimiento · tanque uno",
       disableAuto: true,
       createdBy: "operador@demo.local",
     },

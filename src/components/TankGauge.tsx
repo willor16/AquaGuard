@@ -1,13 +1,7 @@
 "use client";
 
-// Onda de la superficie del agua (se repite en X y se anima con animate-wave).
-const WAVE =
-  "data:image/svg+xml," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='24' viewBox='0 0 120 24'>
-       <path d='M0 12 C 20 2, 40 2, 60 12 S 100 22, 120 12 L120 24 L0 24 Z' fill='#ffffff' fill-opacity='0.18'/>
-     </svg>`
-  );
+import { useEffect, useState } from "react";
+import { useCountUp } from "@/lib/useCountUp";
 
 interface Props {
   levelPct: number;
@@ -26,8 +20,13 @@ export function TankGauge({
   height = 300,
 }: Props) {
   const lvl = Math.max(0, Math.min(100, levelPct));
+  const lvlAnim = useCountUp(lvl);
   const overflow = lvl >= 98;
   const low = lvl <= startPct;
+
+  // el agua sube desde 0 al montar y sigue suavemente los cambios en vivo
+  const [fillH, setFillH] = useState(0);
+  useEffect(() => setFillH(lvl), [lvl]);
 
   const waterTop = offline ? "#3a4554" : overflow ? "#dd5a68" : "#4b8ef0";
   const waterBot = offline ? "#252c37" : overflow ? "#9c3b46" : "#2f6bd4";
@@ -60,31 +59,25 @@ export function TankGauge({
         <div className="relative h-full w-full overflow-hidden rounded-xl border border-base-600 bg-base-900">
           {/* agua */}
           <div
-            className="absolute inset-x-0 bottom-0 transition-[height] duration-700 ease-out"
+            className="absolute inset-x-0 bottom-0 ease-out"
             style={{
-              height: `${lvl}%`,
+              height: `${fillH}%`,
               background: `linear-gradient(to top, ${waterBot}, ${waterTop})`,
+              transition: "height 900ms cubic-bezier(0.22, 1, 0.36, 1), background 400ms ease",
             }}
           >
-            {!offline && (
-              <>
-                <div
-                  className="absolute left-0 top-0 h-5 w-[200%] -translate-y-1/2 animate-wave"
-                  style={{
-                    backgroundImage: `url("${WAVE}")`,
-                    backgroundSize: "120px 24px",
-                    backgroundRepeat: "repeat-x",
-                  }}
-                />
-                <div
-                  className="absolute left-0 top-0 h-5 w-[200%] -translate-y-1/2 animate-wave-slow opacity-60"
-                  style={{
-                    backgroundImage: `url("${WAVE}")`,
-                    backgroundSize: "120px 24px",
-                    backgroundRepeat: "repeat-x",
-                  }}
-                />
-              </>
+            {/* superficie del agua: línea limpia y definida, sin oleaje */}
+            {lvl > 0 && (
+              <div
+                className="absolute inset-x-0 top-0"
+                style={{
+                  height: 2,
+                  background: offline ? "#5a6675" : overflow ? "#f08593" : "#8fc0ff",
+                  boxShadow: offline
+                    ? "none"
+                    : `0 0 10px ${overflow ? "#dd5a68" : "#4b8ef0"}, 0 1px 0 rgba(255,255,255,0.25)`,
+                }}
+              />
             )}
           </div>
 
@@ -93,16 +86,17 @@ export function TankGauge({
           <ThresholdLine pct={startPct} label={`on ${startPct}`} tone="#48b07f" />
 
           {/* lectura grande superpuesta */}
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center transition-opacity duration-500">
             <div
-              className="readout text-5xl font-semibold leading-none"
+              className="readout text-5xl font-bold leading-none tracking-tight"
               style={{
                 color: offline ? "#9aa6b4" : "#ffffff",
-                textShadow: "0 1px 8px rgba(0,0,0,0.55)",
+                textShadow: "0 2px 12px rgba(0,0,0,0.7), 0 0 20px rgba(75,142,240,0.12)",
+                letterSpacing: "-0.02em",
               }}
             >
-              {lvl.toFixed(0)}
-              <span className="text-2xl font-medium text-ink-dim">%</span>
+              {lvlAnim.toFixed(0)}
+              <span className="text-2xl font-semibold text-ink-dim">%</span>
             </div>
           </div>
 
@@ -114,9 +108,14 @@ export function TankGauge({
         </div>
 
         {/* estado bajo el medidor */}
-        <div className="mt-2 flex items-center justify-center gap-2 text-[12px]">
-          {low && !offline && <span className="text-good">nivel bajo · llenando</span>}
-          {overflow && <span className="text-bad">sobrenivel</span>}
+        <div className="mt-3 flex items-center justify-center gap-2 text-[12px] font-medium transition-all duration-300 h-5">
+          {low && !offline && (
+            <span className="text-good animate-fade-in">● nivel bajo · llenando</span>
+          )}
+          {overflow && (
+            <span className="text-bad animate-fade-in">● sobrenivel</span>
+          )}
+          {!low && !overflow && <span className="text-ink-faint h-0 opacity-0">—</span>}
         </div>
       </div>
     </div>
@@ -125,16 +124,30 @@ export function TankGauge({
 
 function ThresholdLine({ pct, label, tone }: { pct: number; label: string; tone: string }) {
   return (
-    <div className="absolute inset-x-0 flex items-center" style={{ bottom: `${pct}%` }}>
+    <div
+      className="absolute inset-x-0 flex items-center pointer-events-none"
+      style={{
+        bottom: `${pct}%`,
+        transform: "translateY(50%)",
+      }}
+    >
+      {/* línea con contorno oscuro: destaca tanto sobre el agua como sobre el fondo */}
       <div
-        className="h-px flex-1"
+        className="relative h-[3px] flex-1"
         style={{
-          backgroundImage: `repeating-linear-gradient(to right, ${tone} 0 6px, transparent 6px 11px)`,
+          background: tone,
+          // halo oscuro arriba/abajo para separar la línea del agua de fondo
+          boxShadow: `0 0 0 1px rgba(0,0,0,0.55), 0 0 6px rgba(0,0,0,0.6)`,
         }}
       />
       <span
-        className="ml-1 rounded px-1.5 py-0.5 text-[10px] font-medium tabular-nums"
-        style={{ color: tone, background: `${tone}1f`, border: `1px solid ${tone}44` }}
+        className="ml-2 rounded-md px-2 py-1 text-[11px] font-bold tabular-nums whitespace-nowrap"
+        style={{
+          color: "#0c0f14",
+          background: tone,
+          boxShadow: `0 1px 4px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3)`,
+          letterSpacing: "0.3px",
+        }}
       >
         {label}
       </span>

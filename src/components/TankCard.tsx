@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Led, Pill } from "./ui";
 import { isOnline, relativeTime } from "@/lib/format";
 import { activeMaintenance } from "@/lib/maintenance";
+import { useCountUp } from "@/lib/useCountUp";
 import type { TankSummary } from "@/lib/types";
 
-export function TankCard({ t }: { t: TankSummary }) {
+export function TankCard({ t, index = 0 }: { t: TankSummary; index?: number }) {
   const r = t.reported;
   const online = isOnline(r?.lastSeen, r?.online);
   const lvl = Math.round(r?.levelPct ?? 0);
+  const lvlAnim = useCountUp(lvl);
   const lvlTone =
     lvl >= 98 ? "#dd5a68" : lvl <= (t.config?.startPct ?? 0) ? "#d6a23e" : "#4b8ef0";
   const eStop = t.config?.emergencyStop === true;
@@ -21,11 +23,12 @@ export function TankCard({ t }: { t: TankSummary }) {
   return (
     <Link
       href={`/tank/${t.tankId}`}
-      className="panel panel-interactive animate-fade-up block p-4 hover:border-cyan/30"
+      style={{ animationDelay: `${index * 70}ms` }}
+      className="panel panel-interactive animate-fade-up block p-4 transition-all duration-300 hover:border-cyan/40 hover:shadow-card-lift"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="truncate font-semibold text-ink">{t.meta?.name}</div>
+          <div className="truncate font-bold text-ink">{t.meta?.name}</div>
           <div className="truncate text-[12px] text-ink-faint">
             {t.meta?.location || t.tankId}
           </div>
@@ -39,7 +42,7 @@ export function TankCard({ t }: { t: TankSummary }) {
             <Pill tone="warn">sin calibrar</Pill>
           ) : null}
           <span
-            className={`inline-flex items-center gap-1.5 text-[12px] ${
+            className={`inline-flex items-center gap-1.5 text-[12px] transition-colors duration-300 ${
               online ? "text-good" : "text-ink-faint"
             }`}
           >
@@ -50,19 +53,23 @@ export function TankCard({ t }: { t: TankSummary }) {
       </div>
 
       {/* nivel */}
-      <div className="mt-4 flex items-end gap-3">
-        <div className="readout text-4xl font-semibold leading-none" style={{ color: lvlTone }}>
-          {lvl}
-          <span className="text-lg text-ink-faint">%</span>
+      <div className="mt-4 flex items-end gap-4">
+        <div className="readout text-4xl font-bold leading-none tracking-tight" style={{ color: lvlTone }}>
+          {Math.round(lvlAnim)}
+          <span className="text-lg font-semibold text-ink-faint">%</span>
         </div>
         <div className="flex-1 pb-1">
-          <div className="h-2 overflow-hidden rounded-full bg-base-900">
+          <div className="h-2.5 overflow-hidden rounded-full bg-base-800 shadow-inner">
             <div
-              className="h-full rounded-full transition-[width] duration-700"
-              style={{ width: `${lvl}%`, background: lvlTone }}
+              className="h-full rounded-full transition-[width] duration-700 ease-out shadow-sm"
+              style={{
+                width: `${lvl}%`,
+                background: lvlTone,
+                boxShadow: `0 0 8px ${lvlTone}44`,
+              }}
             />
           </div>
-          <div className="mt-1 flex justify-between text-[10px] text-ink-faint">
+          <div className="mt-2 flex justify-between text-[11px] font-medium text-ink-faint">
             <span>on {t.config?.startPct}%</span>
             <span>off {t.config?.stopPct}%</span>
           </div>

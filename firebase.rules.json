@@ -13,15 +13,23 @@
           ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
         },
         "config": {
-          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() !== 'lectura'"
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() !== 'lectura' || root.child('users').child(auth.uid).child('role').val() === 'device')"
         },
         "desired": {
-          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() !== 'lectura'"
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() !== 'lectura' || root.child('users').child(auth.uid).child('role').val() === 'device')"
         },
-        "reported": { ".write": "false" },
-        "alerts": { ".write": "false" },
-        "events": { ".write": "false" },
-        "history": { ".write": "false" }
+        "reported": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'device'"
+        },
+        "alerts": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'device'"
+        },
+        "events": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'device'"
+        },
+        "history": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'device'"
+        }
       }
     }
   }

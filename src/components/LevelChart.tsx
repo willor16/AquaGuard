@@ -96,18 +96,34 @@ export function LevelChart({
 
         {/* umbrales */}
         {stopPct !== undefined && (
-          <line x1={padL} x2={W - padR} y1={yFor(stopPct)} y2={yFor(stopPct)} stroke="#d6a23e" strokeWidth={1} strokeDasharray="5 5" opacity={0.55} />
+          <>
+            <line x1={padL} x2={W - padR} y1={yFor(stopPct)} y2={yFor(stopPct)} stroke="#d6a23e" strokeWidth={2} opacity={0.8} />
+            <line x1={padL} x2={W - padR} y1={yFor(stopPct)} y2={yFor(stopPct)} stroke="#d6a23e" strokeWidth={2} strokeDasharray="6 4" opacity={0.4} />
+          </>
         )}
         {startPct !== undefined && (
-          <line x1={padL} x2={W - padR} y1={yFor(startPct)} y2={yFor(startPct)} stroke="#48b07f" strokeWidth={1} strokeDasharray="5 5" opacity={0.55} />
+          <>
+            <line x1={padL} x2={W - padR} y1={yFor(startPct)} y2={yFor(startPct)} stroke="#48b07f" strokeWidth={2} opacity={0.8} />
+            <line x1={padL} x2={W - padR} y1={yFor(startPct)} y2={yFor(startPct)} stroke="#48b07f" strokeWidth={2} strokeDasharray="6 4" opacity={0.4} />
+          </>
         )}
 
         {points.length >= 2 ? (
           <>
-            <path d={area} fill="url(#lvlFill)" />
-            <path d={path} fill="none" stroke="#4b8ef0" strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round" />
-            <circle cx={lastX} cy={lastY} r={3.5} fill="#6ea4f5" />
-            <circle cx={lastX} cy={lastY} r={6} fill="none" stroke="#6ea4f5" strokeOpacity={0.4} />
+            <path d={area} fill="url(#lvlFill)" className="animate-fade-in" />
+            <path
+              d={path}
+              fill="none"
+              stroke="#4b8ef0"
+              strokeWidth={2.2}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray={1}
+              className="animate-draw-in"
+            />
+            <circle cx={lastX} cy={lastY} r={4} fill="#6ea4f5" />
+            <circle cx={lastX} cy={lastY} r={7} fill="none" stroke="#6ea4f5" strokeOpacity={0.5} strokeWidth={1.5} className="animate-pulse-led" />
           </>
         ) : (
           <text x={W / 2} y={H / 2} textAnchor="middle" className="fill-ink-faint" style={{ fontSize: 12, fontFamily: "var(--font-mono)" }}>

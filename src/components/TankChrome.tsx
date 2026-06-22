@@ -46,10 +46,10 @@ export function TankChrome({ tankId, children }: { tankId: string; children: Rea
   return (
     <div className="space-y-5">
       {/* cabecera del tanque */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3 animate-fade-up">
         <div>
-          <h1 className="text-xl font-semibold text-ink">{tank.meta.name}</h1>
-          <p className="text-[13px] text-ink-dim">
+          <h1 className="text-2xl font-bold tracking-tight text-ink">{tank.meta.name}</h1>
+          <p className="mt-0.5 text-[13px] text-ink-dim">
             {tank.meta.location || tankId} ·{" "}
             <span className="text-ink-faint">id: {tankId}</span>
           </p>

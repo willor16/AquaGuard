@@ -10,6 +10,7 @@ import { useTanksList } from "@/lib/hooks";
 import { getData } from "@/lib/data";
 import { useAuth, canManageTanks, canControl } from "@/lib/auth";
 import { isOnline } from "@/lib/format";
+import { useCountUp } from "@/lib/useCountUp";
 
 function Overview() {
   const { tanks, loading } = useTanksList();
@@ -40,9 +41,9 @@ function Overview() {
         />
       }
     >
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold text-ink">Flota de tanques</h1>
-        <p className="text-[13px] text-ink-dim">monitoreo y control en tiempo real</p>
+      <div className="mb-6 animate-fade-up">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Flota de tanques</h1>
+        <p className="mt-0.5 text-[13px] text-ink-dim">monitoreo y control en tiempo real</p>
       </div>
 
       {/* banner de paro general */}
@@ -70,10 +71,15 @@ function Overview() {
 
       {/* resumen de la flota */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="tanques" value={tanks.length} tone="#d8dee6" />
-        <Stat label="en línea" value={`${online}/${tanks.length}`} tone="#48b07f" />
-        <Stat label="nivel medio" value={`${avg}%`} tone="#4b8ef0" />
-        <Stat label="alertas" value={alerts} tone={alerts > 0 ? "#dd5a68" : "#69737f"} />
+        <Stat label="tanques" value={tanks.length} tone="#d8dee6" index={0} />
+        <Stat label="en línea" value={online} total={tanks.length} tone="#48b07f" index={1} />
+        <Stat label="nivel medio" value={avg} suffix="%" tone="#4b8ef0" index={2} />
+        <Stat
+          label="alertas"
+          value={alerts}
+          tone={alerts > 0 ? "#dd5a68" : "#69737f"}
+          index={3}
+        />
       </div>
 
       {loading ? (
@@ -84,8 +90,8 @@ function Overview() {
         <Empty admin={canManageTanks(user?.role)} />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tanks.map((t) => (
-            <TankCard key={t.tankId} t={t} />
+          {tanks.map((t, i) => (
+            <TankCard key={t.tankId} t={t} index={i} />
           ))}
         </div>
       )}
@@ -93,12 +99,44 @@ function Overview() {
   );
 }
 
-function Stat({ label, value, tone }: { label: string; value: React.ReactNode; tone: string }) {
+function Stat({
+  label,
+  value,
+  tone,
+  suffix,
+  total,
+  index = 0,
+}: {
+  label: string;
+  value: number;
+  tone: string;
+  suffix?: string;
+  total?: number;
+  index?: number;
+}) {
+  const n = useCountUp(value);
   return (
-    <div className="panel px-4 py-3">
-      <div className="label mb-1">{label}</div>
-      <div className="readout text-2xl font-semibold leading-none" style={{ color: tone }}>
-        {value}
+    <div
+      className="panel animate-fade-up overflow-hidden px-4 py-3.5"
+      style={{ animationDelay: `${index * 70}ms` }}
+    >
+      {/* filo de acento sutil arriba */}
+      <span
+        className="absolute inset-x-0 top-0 h-0.5 opacity-70"
+        style={{ background: `linear-gradient(90deg, ${tone}00, ${tone}, ${tone}00)` }}
+      />
+      <div className="label mb-1.5">{label}</div>
+      <div className="flex items-baseline gap-1">
+        <span
+          className="readout text-3xl font-bold leading-none tracking-tight"
+          style={{ color: tone }}
+        >
+          {Math.round(n)}
+          {suffix && <span className="text-lg font-semibold opacity-70">{suffix}</span>}
+        </span>
+        {total !== undefined && (
+          <span className="text-base font-semibold text-ink-faint">/{total}</span>
+        )}
       </div>
     </div>
   );
@@ -106,12 +144,12 @@ function Stat({ label, value, tone }: { label: string; value: React.ReactNode; t
 
 function Empty({ admin }: { admin: boolean }) {
   return (
-    <div className="panel grid place-items-center gap-3 py-16 text-center">
+    <div className="panel animate-fade-up grid place-items-center gap-3 py-16 text-center">
       <p className="text-sm text-ink-dim">No hay tanques asignados a tu usuario.</p>
       {admin && (
         <Link
           href="/settings/tanks"
-          className="rounded-md border border-cyan/40 bg-cyan/10 px-4 py-2 text-[13px] font-medium text-cyan transition hover:bg-cyan/15"
+          className="rounded-lg border border-cyan/50 bg-cyan/10 px-4 py-2.5 text-[13px] font-semibold text-cyan transition-all duration-200 hover:bg-cyan/20 hover:border-cyan/70 active:scale-[0.98]"
         >
           Dar de alta un tanque
         </Link>

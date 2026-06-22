@@ -83,15 +83,20 @@ const config: Config = {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        "draw-in": {
+          from: { strokeDashoffset: "1" },
+          to: { strokeDashoffset: "0" },
+        },
       },
       animation: {
         "pulse-led": "pulse-led 2s ease-in-out infinite",
         "ping-ring": "ping-ring 2s cubic-bezier(0,0,0.2,1) infinite",
         wave: "wave 8s linear infinite",
         "wave-slow": "wave 13s linear infinite",
-        "fade-up": "fade-up 0.35s cubic-bezier(0.4,0,0.2,1) both",
+        "fade-up": "fade-up 0.45s cubic-bezier(0.22,1,0.36,1) both",
         "fade-in": "fade-in 0.3s ease-out both",
         "scale-in": "scale-in 0.2s cubic-bezier(0.34,1.56,0.64,1) both",
+        "draw-in": "draw-in 1.4s cubic-bezier(0.22,1,0.36,1) forwards",
       },
     },
   },

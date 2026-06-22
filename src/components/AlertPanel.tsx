@@ -19,36 +19,36 @@ export function AlertPanel({ alerts }: { alerts: Record<string, Alert> }) {
 
   if (active.length === 0) {
     return (
-      <div className="flex items-center gap-2.5 rounded-md border border-good/25 bg-good/[0.06] px-3.5 py-3">
-        <Led tone="good" />
-        <span className="text-[13px] text-good">sin alertas · sistema nominal</span>
+      <div className="flex items-center gap-3 rounded-lg border border-good/30 bg-good/10 px-4 py-3.5 transition-all duration-300">
+        <Led tone="good" size={10} />
+        <span className="text-[13px] font-medium text-good">sin alertas · sistema nominal</span>
       </div>
     );
   }
 
   return (
-    <ul className="space-y-2">
+    <ul className="space-y-2.5">
       {active.map(([id, a]) => {
         const sev = SEVERITY[a.code] ?? { tone: "warn" as const, title: a.code };
         const c = sev.tone === "bad" ? "#dd5a68" : sev.tone === "warn" ? "#d6a23e" : "#5b93d6";
         return (
           <li
             key={id}
-            className="flex items-start gap-3 rounded-md border px-3.5 py-3 animate-fade-up"
-            style={{ borderColor: `${c}33`, background: `${c}0d` }}
+            className="flex items-start gap-3 rounded-lg border px-4 py-3.5 animate-fade-up transition-all duration-300 hover:shadow-panel"
+            style={{ borderColor: `${c}44`, background: `${c}12` }}
           >
             <span className="mt-1">
-              <Led tone={sev.tone} pulse />
+              <Led tone={sev.tone} pulse size={10} />
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-medium" style={{ color: c }}>
+                <span className="font-bold text-[13px]" style={{ color: c }}>
                   {sev.title}
                 </span>
-                <span className="text-[11px] text-ink-faint">{a.code}</span>
+                <span className="text-[10px] font-medium text-ink-faint">{a.code}</span>
               </div>
-              <div className="mt-0.5 text-[13px] text-ink-dim">{a.message}</div>
-              <div className="mt-1 text-[11px] text-ink-faint">{relativeTime(a.ts)}</div>
+              <div className="mt-1 text-[13px] font-medium text-ink-dim">{a.message}</div>
+              <div className="mt-1.5 text-[11px] text-ink-faint">{relativeTime(a.ts)}</div>
             </div>
           </li>
         );

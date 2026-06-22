@@ -29,16 +29,16 @@ export function Led({
       {ping && (
         <span
           className="animate-ping-ring absolute inset-0 rounded-full"
-          style={{ background: c }}
+          style={{ background: c, opacity: 0.7 }}
         />
       )}
       <span
-        className={`relative inline-block rounded-full ${pulse ? "animate-pulse-led" : ""}`}
+        className={`relative inline-block rounded-full transition-all duration-300 ${pulse ? "animate-pulse-led" : ""}`}
         style={{
           width: size,
           height: size,
           background: c,
-          boxShadow: `0 0 0 3px ${c}22`,
+          boxShadow: `0 0 0 2px ${c}33, inset 0 1px 1px ${c}66`,
         }}
       />
     </span>
@@ -57,11 +57,12 @@ export function Pill({
   const c = toneColor[tone];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold transition-all duration-200 ${className}`}
       style={{
         color: c,
-        background: `${c}1a`,
-        border: `1px solid ${c}33`,
+        background: `${c}22`,
+        border: `1.5px solid ${c}55`,
+        boxShadow: `0 0 0 2px ${c}0a`,
       }}
     >
       {children}
@@ -89,13 +90,13 @@ export function Toggle({
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 ease-smooth disabled:opacity-40 ${
-        checked ? "border-cyan/60 bg-cyan/30" : "border-base-600 bg-base-750"
+      className={`relative h-6 w-11 shrink-0 rounded-full border-2 transition-all duration-250 ease-smooth disabled:opacity-40 ${
+        checked ? "border-cyan bg-cyan/40 shadow-glow" : "border-base-600 bg-base-750"
       }`}
     >
       <span
-        className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full shadow-sm transition-all duration-200 ease-spring ${
-          checked ? "left-[calc(100%-1.25rem)] bg-cyan" : "left-1 bg-ink-faint"
+        className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full shadow-sm transition-all duration-250 ease-spring ${
+          checked ? "left-[calc(100%-1.35rem)] bg-cyan" : "left-0.5 bg-ink-dim"
         }`}
       />
     </button>
@@ -145,19 +146,20 @@ export function Metric({
   tone?: Tone;
   sub?: ReactNode;
 }) {
+  const c = toneColor[tone];
   return (
-    <div className="rounded-md border border-base-700 bg-base-850 px-3.5 py-3 transition-colors duration-200 hover:border-base-600">
-      <div className="label mb-1.5">{label}</div>
-      <div className="flex items-baseline gap-1">
+    <div className="rounded-lg border border-base-700 bg-base-850 px-4 py-3.5 transition-all duration-300 hover:border-base-600 hover:shadow-panel">
+      <div className="label mb-2 font-medium tracking-wide">{label}</div>
+      <div className="flex items-baseline gap-2">
         <span
-          className="readout text-2xl font-semibold leading-none"
-          style={{ color: toneColor[tone] }}
+          className="readout text-3xl font-bold leading-none tracking-tight"
+          style={{ color: c }}
         >
           {value}
         </span>
-        {unit && <span className="text-sm text-ink-faint">{unit}</span>}
+        {unit && <span className="text-sm font-medium text-ink-faint">{unit}</span>}
       </div>
-      {sub && <div className="mt-1.5 text-[11px] text-ink-dim">{sub}</div>}
+      {sub && <div className="mt-2 text-[11px] font-medium text-ink-dim">{sub}</div>}
     </div>
   );
 }
@@ -178,12 +180,12 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex min-h-[40px] items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-150 ease-smooth active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40";
+    "inline-flex min-h-[40px] items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-150 ease-smooth active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40";
   const variants: Record<string, string> = {
-    primary: "bg-cyan font-semibold text-white shadow-sm hover:bg-cyan-deep",
-    active: "border border-cyan/60 bg-cyan/10 text-cyan hover:bg-cyan/15",
-    ghost: "border border-base-600 bg-base-750 text-ink-dim hover:border-base-600 hover:bg-base-700 hover:text-ink",
-    danger: "border border-bad/50 bg-bad/10 text-bad hover:bg-bad/15",
+    primary: "bg-cyan text-white shadow-sm hover:bg-cyan-deep hover:shadow-panel",
+    active: "border border-cyan/50 bg-cyan/15 text-cyan hover:bg-cyan/20 hover:border-cyan/70",
+    ghost: "border border-base-600 bg-base-750 text-ink-dim hover:border-base-500 hover:bg-base-700 hover:text-ink",
+    danger: "border border-bad/60 bg-bad/15 text-bad hover:bg-bad/20 hover:border-bad/80",
   };
   return (
     <button
